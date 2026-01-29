@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nike SB RPM Master Archive - Terminal Access</title>
+    <style>
+        :root {
+            --bg-color: #0d0d0d;
+            --text-color: #33ff00;
+            --dim-color: #1a8000;
+            --error-color: #ff3333;
+            --font-stack: 'Courier New', Courier, monospace;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-stack);
+            margin: 0;
+            padding: 20px;
+            font-size: 16px;
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+
+        #terminal {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            white-space: pre-wrap;
+            margin-bottom: 20px;
+            color: var(--text-color);
+            font-weight: bold;
+        }
+
+        .output-line {
+            margin-bottom: 5px;
+            white-space: pre-wrap;
+        }
+
+        .input-line {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .prompt {
+            margin-right: 10px;
+            color: var(--text-color);
+        }
+
+        input {
+            background: transparent;
+            border: none;
+            color: var(--text-color);
+            font-family: var(--font-stack);
+            font-size: 16px;
+            flex-grow: 1;
+            outline: none;
+            caret-color: var(--text-color);
+        }
+
+        /* Utility Classes for formatting */
+        .dim { color: var(--dim-color); }
+        .error { color: var(--error-color); }
+        .highlight { color: #fff; font-weight: bold; }
+        
+        /* Table simulation */
+        .table-row {
+            display: grid;
+            grid-template-columns: 150px 200px 100px 1fr;
+            gap: 10px;
+        }
+        
+        .mobile-warning {
+            display: none;
+            font-size: 12px;
+            color: var(--dim-color);
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 600px) {
+            .mobile-warning { display: block; }
+            .table-row {
+                display: block;
+                margin-bottom: 10px;
+                border-bottom: 1px solid #333;
+                padding-bottom: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div id="terminal">
+    <div class="header">
+  _   _ _ _         ____  ____    ____  ____  __  __ 
+ | \ | (_) | _____ / ___|| __ )  |  _ \|  _ \|  \/  |
+ |  \| | | |/ / _ \___ \ |  _ \  | |_) | |_) | |\/| |
+ | |\  | |   <  __/___) || |_) | |  _ <|  __/| |  | |
+ |_| \_|_|_|\_\___|____/ |____/  |_| \_\_|   |_|  |_|
+                                                     
+ MASTER ARCHIVE TERMINAL v1.0.6
+ Authorized User: Archivist
+ Type 'help' to view available commands.
+    </div>
+    
+    <div class="mobile-warning">For best experience, use a desktop keyboard.</div>
+
+    <div id="history"></div>
+
+    <div class="input-line">
+        <span class="prompt">archivist@rpm-db:~$</span>
+        <input type="text" id="commandInput" autofocus autocomplete="off" spellcheck="false">
+    </div>
+</div>
+
+<script>
+    // --- DATA STORE (Updated with YOUR Research Notes) ---
+    const fileSystem = {
+        'README.md': `
+# Nike SB RPM Master Archive
+
+**Status:** In Progress
+**Archivist:** Tamir Segal
+
+## 📖 About This Project
+This is a community-driven archive dedicated to the **Nike SB RPM Backpack**. The goal is to document every colorway, material change, and generation of this iconic skate bag.
+
+## 📐 The Standard Specs
+- **Capacity:** 26 Liters
+- **Dimensions:** 53.5 cm (H) x 33 cm (W) x 18 cm (D)
+- **Laptop Sleeve:** Fits up to 15"
+`,
+        'specs.txt': `
+OFFICIAL SPECIFICATIONS:
+-----------------------
+MATERIAL: 
+- Vintage Era: 600D Polyester / Cordura
+- Modern Era: 100% Textured Polyester (min 65% Recycled content)
+
+FEATURES:
+- Exterior skateboard straps (Velcro/Buckle)
+- Curved shoulder straps
+- Sternum strap
+- Vertical front zipper (expandable)
+`,
+        'skus.db': [
+            { 
+                sku: 'BA2037-089', 
+                name: 'Elephant / Black', 
+                era: 'Elephant (Gen1)', 
+                notes: 'First sold publicly. High-contrast grey print on black base. Elephant print is the dominant visual element.' 
+            },
+            { 
+                sku: 'BA2037-222', 
+                name: 'Elephant / Tan', 
+                era: 'Elephant (Gen1)', 
+                notes: 'The "Earth Tone" foundational piece. Specimen missing external skate straps. Features prominent tonal elephant texture.' 
+            },
+            { 
+                sku: 'BA2049-089', 
+                name: 'Elephant / Black', 
+                era: 'Elephant (Gen2)', 
+                notes: 'The final iteration of the Elephant Era. (2 specimens held). Maintains the dominant print legacy.' 
+            },
+            { sku: 'BA5403-010', name: 'Black / Black', era: 'OG / BA', notes: 'The classic. White "Nike SB" patch.' },
+            { sku: 'BA5971-014', name: 'Black / Black', era: 'Late BA', notes: 'Updated matte black hardware.' },
+            { sku: 'FD7544-010', name: 'Black / White', era: 'Modern / FD', notes: 'Recycled materials. "Sportswear" branding.' },
+            { sku: 'FD7544-338', name: 'Vintage Green', era: 'Modern / FD', notes: 'Earth tone release.' },
+            { sku: 'FD7544-540', name: 'Cave Purple', era: 'Modern / FD', notes: 'Rare purple variant.' },
+            { sku: 'BA5404-223', name: 'Iguana / Black', era: 'OG', notes: 'Desert Camo style.' },
+            { sku: 'CK5888-010', name: 'Black Camo', era: 'CK', notes: 'Dark camouflage print.' },
+            { sku: 'DH3069-010', name: 'World Tour', era: 'DH', notes: 'Black with neon details.' },
+            { sku: 'DR6426-482', name: 'Doernbecher', era: 'DR', notes: 'Catalina / Cookie theme.' }
+        ]
+    };
+
+    const historyDiv = document.getElementById('history');
+    const inputField = document.getElementById('commandInput');
+
+    // Focus input when clicking anywhere
+    document.addEventListener('click', () => inputField.focus());
+
+    inputField.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            const command = this.value.trim();
+            if (command) {
+                addToHistory(command, true);
+                processCommand(command);
+            }
+            this.value = '';
+            window.scrollTo(0, document.body.scrollHeight);
+        }
+    });
+
+    function addToHistory(text, isCommand = false) {
+        const line = document.createElement('div');
+        line.className = 'output-line';
+        if (isCommand) {
+            line.innerHTML = `<span class="prompt">archivist@rpm-db:~$</span> ${text}`;
+        } else {
+            line.innerHTML = text; // Allow HTML in output
+        }
+        historyDiv.appendChild(line);
+    }
+
+    function processCommand(cmdRaw) {
+        const parts = cmdRaw.split(' ');
+        const cmd = parts[0].toLowerCase();
+        const arg = parts.slice(1).join(' ');
+
+        switch (cmd) {
+            case 'help':
+                addToHistory(`
+Available Commands:
+  <span class="highlight">ls</span>              List all files in the archive
+  <span class="highlight">cat [file]</span>      Read a file (e.g., 'cat specs.txt')
+  <span class="highlight">list</span>            Show detailed SKU table
+  <span class="highlight">search [term]</span>   Search database for color/sku (e.g., 'search camo')
+  <span class="highlight">clear</span>           Clear terminal screen
+  <span class="highlight">whoami</span>          Display user info
+                `);
+                break;
+
+            case 'ls':
+                addToHistory('FILES IN DIRECTORY:');
+                Object.keys(fileSystem).forEach(key => {
+                    if (key !== 'skus.db') addToHistory(`<span class="highlight">${key}</span>`);
+                });
+                addToHistory(`<span class="dim">skus.db (Encrypted Binary - use 'list' to view)</span>`);
+                break;
+
+            case 'cat':
+                if (!arg) {
+                    addToHistory('<span class="error">Error: Filename required. Usage: cat [filename]</span>');
+                } else if (fileSystem[arg] && arg !== 'skus.db') {
+                    addToHistory(fileSystem[arg].replace(/\n/g, '<br>'));
+                } else if (arg === 'skus.db') {
+                    addToHistory('<span class="error">Error: Binary file. Use "list" command to view structured data.</span>');
+                } else {
+                    addToHistory(`<span class="error">Error: File '${arg}' not found.</span>`);
+                }
+                break;
+
+            case 'list':
+                addToHistory('<span class="highlight">SKU           COLORWAY             ERA         NOTES</span>');
+                addToHistory('------------------------------------------------------------');
+                fileSystem['skus.db'].forEach(item => {
+                    // Simple padding for alignment
+                    const sku = item.sku.padEnd(13, ' ');
+                    const name = item.name.padEnd(20, ' ');
+                    const era = item.era.padEnd(11, ' ');
+                    addToHistory(`${sku} ${name} ${era} ${item.notes}`);
+                });
+                break;
+
+            case 'search':
+                if (!arg) {
+                    addToHistory('<span class="error">Error: Search term required.</span>');
+                    return;
+                }
+                const results = fileSystem['skus.db'].filter(item => 
+                    item.sku.toLowerCase().includes(arg.toLowerCase()) || 
+                    item.name.toLowerCase().includes(arg.toLowerCase()) ||
+                    item.notes.toLowerCase().includes(arg.toLowerCase())
+                );
+                if (results.length > 0) {
+                    addToHistory(`Found ${results.length} matches for "${arg}":`);
+                    results.forEach(item => {
+                        addToHistory(`<span class="highlight">[${item.sku}]</span> ${item.name} (${item.era})`);
+                    });
+                } else {
+                    addToHistory(`No matches found for "${arg}".`);
+                }
+                break;
+
+            case 'clear':
+                historyDiv.innerHTML = '';
+                break;
+
+            case 'whoami':
+                addToHistory('uid=0(root) gid=0(root) groups=0(root), 101(archivists)');
+                break;
+
+            default:
+                addToHistory(`<span class="error">Command '${cmd}' not found. Type 'help' for options.</span>`);
+        }
+    }
+</script>
+
+</body>
+</html>
+   
