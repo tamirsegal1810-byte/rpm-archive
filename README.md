@@ -6,12 +6,12 @@
 
 **Principal Investigator:** Tamir Segal  
 **Last Updated:** January 2026  
-**Subject:**The First Nike SB RPM Master Archive
+**Subject:** Material Culture Analysis of the Nike SB "RPM" Chassis (Style Code: BA4595)
 
 ---
 
 ## 1. Core Thesis
-The **Nike SB RPM Master Archive** First and foremost, this is a museum‑minded, academically structured digital archive documenting Nike SB RPM backpacks. Material culture is treated as **evidence**, not vibes. The core goal is to build the first rigorous, reusable research corpus for RPM models: photos, metadata, provenance, file integrity, timelines, and interpretive notes that can support future scholarship.
+The **Nike SB RPM Master Archive** is a museum‑minded, academically structured digital archive documenting Nike SB RPM backpacks as material culture—treated as **evidence**, not vibes. The core goal is to build the first rigorous, reusable research corpus for RPM models: photos, metadata, provenance, file integrity, timelines, and interpretive notes that can support future scholarship.
 
 We are building a **micro‑history of skate culture through a “low” everyday object**, using methods borrowed from academic history + textual studies (anchoring claims to sources, building taxonomies, tracking variants, and documenting uncertainty).
 
@@ -20,8 +20,6 @@ We are building a **micro‑history of skate culture through a “low” everyda
 * **The "Proto" Era:** Pre‑2037 samples and early lineage (e.g., BA2318).
 * **BA2449‑089:** The end of the Elephant print era.
 * **The Camo Boom:** Separating "Tiger Camo" lore from material evidence.
-* **The Graphic Era until Today** Last RPM evolution and changes.
-  
 
 ## 3. Methodology & Preservation Mindset
 We operate like conservators, not resellers:
