@@ -2,25 +2,52 @@
 
 **Status:** In Progress     **Archivist:** Tamir Segal
 
-## **📖 About This Project**
+## ** About This Project**
 
 This is a community-driven archive dedicated to the **Nike SB RPM Backpack**. The goal is to document every colorway, material change, and generation of this iconic skate bag while keeping full academic integrity.
 
 **Why document this?** The RPM has existed since roughly 2007, but Nike SB does not keep a public archive of past colorways. This repository serves as the definitive guide for collectors and skaters.
 
-## **📐 The Standard Specs (Base Model)**
+## ** The Standard Specs (Base Model)**
 
 *Regardless of color, most RPMs adhere to these metrics. Deviations indicate a "Special Edition" or a different generation.*
 
-* **Capacity:** 26 Liters (Standard)  
+* **Capacity:** 26~ Liters (Standard)  
 * **Dimensions:** 53.5 cm (H) x 33 cm (W) x 18 cm (D)  
 * **Laptop Sleeve:** Fits up to 15"  
 * **Material:** \* *Vintage Era:* 600D Polyester / Cordura (on select models)  
   * *Modern Era:* 100% Textured Polyester (min 65% Recycled content)
 
-## **🧬 Generation Timeline & Identification**
+## ** Generation Timeline & Identification**
 
-*The RPM has gone through subtle re-brandings. Use this key to identify the "Era" of a bag.*
+
+##  Analysis: The "Year Zero" Chassis (BA2037)
+
+### 1. Introduction: Why BA2037 Matters
+
+The **BA2037-089/223** represents the pivotal transition of the RPM from a conceptual media preview to a tangible, repeatable product. While prototypes appeared as early as 2006, the BA2037 is recognized as the **Year Zero** of the RPM timeline—the first chassis made available for public sale during the Nike SB "Gold Box" era (late 2007–early 2008). It established the stable platform that defines the RPM legacy.
+
+### 2. Research Methodology
+
+To maintain archival rigor, this project categorizes models based on three primary criteria:
+
+* **Retail Verification:** We distinguish between "incubation" (media previews/prototypes) and "Year Zero" based on confirmed shop availability.
+
+
+* **Chassis Feature Mapping:** A model is identified as a true RPM chassis by a fixed feature map: board-carry straps, padded laptop sleeve, practical pocket layout, and MOLLE webbing.
+
+
+* **Authentication Benchmarks:** We use specific tactile markers—such as textile-applied elephant print (rather than vinyl overlays) and first-generation hardware—to separate the Year Zero chassis from later iterations.
+
+
+
+### 3. Design DNA & Evolution
+
+The BA2037 succeeded by balancing utility with Nike’s visual heritage. Its "restrained" use of elephant print on the bottom panel and lower straps allowed for durability while maintaining a connection to the Air Jordan 3. This foundational success allowed Nike to later experiment with materials (BA2318) and eventually scale the platform (BA2449).
+
+---
+
+**Would you like me to help you format a specific "Comparison Table" between this Year Zero BA2037 and the modern FD models for your archive?**The Nike SB RPM has gone through some rebrandings which usually corresponds with the model's "Era". Use this key to identify the "Era" of a bag.*
 
 | Era Prefix | Approx Years | Distinguishing Features |
 | :---- | :---- | :---- |
@@ -30,11 +57,11 @@ This is a community-driven archive dedicated to the **Nike SB RPM Backpack**. Th
 | **DD/DR** | \~2022 \- 2023 | "RPM Graphic" series. Often printed polyester rather than woven. |
 | **FD** | 2023 \- Present | **"Sportswear" Rebrand.** Often listed as "Nike Sportswear RPM" even with skate straps. Recycled materials. |
 
-## **🗄️ Master SKU Database**
+## ** Master SKU Database**
 
 *Confirmed models found in initial research sweep.*
 
-### **⚫ Core Solids (The Essentials)**
+### ** Core Solids (The Essentials)**
 
 | SKU | Colorway Name | Era | Notes |
 | :---- | :---- | :---- | :---- |
@@ -46,7 +73,7 @@ This is a community-driven archive dedicated to the **Nike SB RPM Backpack**. Th
 | **FD7544-474** | Glacier Blue | Modern / FD | Icy blue, recent release. |
 | **FD7544-291** | Plum Eclipse | Modern / FD | Dark reddish-purple. |
 
-### **🎨 Graphic & Camo Editions (The Grails)**
+### ** Graphic & Camo Editions (The Grails)**
 
 | SKU | Colorway Name | Visual Description | Status |
 | :---- | :---- | :---- | :---- |
@@ -58,7 +85,7 @@ This is a community-driven archive dedicated to the **Nike SB RPM Backpack**. Th
 | **DR6426-482** | **Doernbecher (Catalina)** | "Cookie" theme? Rare charity release. | 💎 Grail |
 | **FD9686-405** | **Doernbecher (Coley)** | Blue graphics, basket weave print. | 💎 Grail |
 
-## **🕵️ Research Wishlist (Missing Data)**
+## ** Research Wishlist (Missing Data)**
 
 *These are known variations that lack confirmed SKUs. Focus research here.*
 
@@ -66,14 +93,14 @@ This is a community-driven archive dedicated to the **Nike SB RPM Backpack**. Th
 2. **The "Floral" Graphic:** Still need definitive SKU for the all-over floral print seen in 2018-2019.  
 3. **Zipper Pull Evolution:** Pinpoint exact transition from "Paracord knots" (common on BA) to "Metal Tabs" (common on FD).
 
-## **🤝 How to Contribute**
+## ** How to Contribute**
 
 Found a bag not listed here?
 
 1. Open an **Issue** with the SKU and a photo.  
 2. Submit a **Pull Request** adding the SKU to the table above.
 
-## **📝 Field Notes**
+## ** Field Notes**
 
 * **Observation:** Newer FD models feel lighter due to recycled poly; older BA models feel more rigid/canvas-like.  
 * **Observation:** **SB vs Sportswear:** "Nike SB" versions have the SB logo stitched into the back padding and printed on the inner lining. "Sportswear" (NSW) versions usually lack the back padding embroidery.  
