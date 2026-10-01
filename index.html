@@ -227,15 +227,15 @@
             return (
                 <div className="measure">
                     <h1 className="page">About this archive</h1>
-                    <p className="lead">This site documents the Nike SB RPM backpack colorway by colorway, from its first public release in 2008 to the present. Each record is identified by its Nike style code and described with the Dublin Core metadata elements, so the catalog can be read, cited and reused outside this site.</p>
+                    <p className="lead">This site documents the Nike SB RPM backpack colorway by colorway, from 2007 to the present. Each record is identified by its Nike style code and described with the Dublin Core metadata elements, so the catalog can be read, cited and reused outside this site.</p>
                     <p className="links"><a href={href('catalog')}>Browse the catalog</a> · <a href={href('essays/' + ESSAYS[0].id)}>Read the Year Zero essay</a></p>
 
                     <h2>Current position: Year Zero</h2>
-                    <p>The archive has formally identified <strong>BA2037 (2008)</strong> as the first publicly sold Nike SB RPM chassis. While incubation prototypes existed in 2006, BA2037 established the "fixed feature map"—board straps, laptop sleeve, MOLLE webbing—that defined the line for the next two decades.</p>
+                    <p>This archive takes <strong>BA2037</strong> as the first publicly sold Nike SB RPM chassis. While incubation prototypes existed in 2006, BA2037 established the "fixed feature map"—board straps, laptop sleeve, MOLLE webbing—that defined the line for the next two decades.</p>
                     <p className="note"><a href={href('essays/' + ESSAYS[0].id)}>Read the full essay</a></p>
 
                     <h2>Scope</h2>
-                    <p>This archive serves to standardize the metadata of the RPM series, ensuring that technical design choices from 2012–2026 are preserved in a machine-readable format.</p>
+                    <p>This archive serves to standardize the metadata of the RPM series, ensuring that technical design choices from 2007 to the present are preserved in a machine-readable format.</p>
 
                     <h2>The data</h2>
                     <p>The catalog is a single file, <a href={CSV_URL}><span className="mono">data/master_metadata.csv</span></a>, kept in the project's public repository. Every record on this site is read from that file, and corrections are made there.{data.length > 0 && <> It currently holds {data.length} records, {held} of them in the collection.</>}</p>
