@@ -37,148 +37,41 @@
             return <i data-lucide={name} className={className}></i>;
         };
 
-        const INITIAL_DATA = [
-            { 
-                id: 0, 
-                dc_title: "RPM Year Zero - Black Elephant",
-                dc_identifier: "BA2037-089", 
-                dc_date: "2008", 
-                dc_creator: "Nike SB Design Team",
-                dc_subject: "Skateboarding Equipment; Year Zero; Heritage; Elephant Print",
-                dc_description: "The first publicly sold Nike SB RPM chassis. Features textile-applied elephant print on the bottom panel and lower front straps. Gold Box Era foundational model.",
-                dc_publisher: "Nike, Inc.",
-                dc_contributor: "Incubation Period (2006-2008)",
-                dc_type: "Physical Object",
-                dc_format: "Textile; 600D Polyester; Textile-applied Print",
-                dc_source: "Gold Box Era Release",
-                dc_language: "en-US",
-                dc_relation: "Baseline Chassis",
-                dc_coverage: "Global Release",
-                dc_rights: "© Nike, Inc.",
-                colorway: "Black/Elephant",
-                rarity: "Holy Grail"
-            },
-            { 
-                id: 1, 
-                dc_title: "RPM Backpack - Black Anthracite",
-                dc_identifier: "BA3241-001", 
-                dc_date: "2012", 
-                dc_creator: "Nike SB Design Team",
-                dc_subject: "Skateboarding Equipment; Luggage; RPM Series",
-                dc_description: "The original 26L RPM silhouette featuring 600D polyester, external skateboard straps, and a curved shoulder strap system.",
-                dc_publisher: "Nike, Inc.",
-                dc_contributor: "James Arizumi",
-                dc_type: "Physical Object",
-                dc_format: "Textile; 600D Polyester",
-                dc_source: "SB Catalog 2012",
-                dc_language: "en-US",
-                dc_relation: "OG Model",
-                dc_coverage: "Beaverton, OR",
-                dc_rights: "© Nike, Inc.",
-                colorway: "Black/Black",
-                rarity: "Common"
-            },
-            { 
-                id: 2, 
-                dc_title: "RPM Backpack - Iguana Camo",
-                dc_identifier: "BA3241-200", 
-                dc_date: "2014", 
-                dc_creator: "Nike SB Design Team",
-                dc_subject: "Skateboarding Equipment; Camouflage; Tactical",
-                dc_description: "Woodland-inspired variant featuring the iconic 'Iguana' camo print, a staple of early 2010s SB apparel.",
-                dc_publisher: "Nike, Inc.",
-                dc_contributor: "Apparel Division",
-                dc_type: "Physical Object",
-                dc_format: "Textile; High-Density Polyester",
-                dc_source: "SB Q3 2014 Guide",
-                dc_language: "en-US",
-                dc_relation: "Part of Camo Pack",
-                dc_coverage: "Global Release",
-                dc_rights: "© Nike, Inc.",
-                colorway: "Iguana/Black",
-                rarity: "Uncommon"
-            },
-            { 
-                id: 3, 
-                dc_title: "RPM Backpack - Solar Red",
-                dc_identifier: "BA3241-601", 
-                dc_date: "2015", 
-                dc_creator: "Nike SB Design Team",
-                dc_subject: "Skateboarding Equipment; High-Visibility",
-                dc_description: "A vibrant Solar Red colorway, highlighting the unique RPM webbing and hardware contrast.",
-                dc_publisher: "Nike, Inc.",
-                dc_contributor: "Lifestyle Group",
-                dc_type: "Physical Object",
-                dc_format: "Textile; Synthetic Fiber",
-                dc_source: "Archive Records #601",
-                dc_language: "en-US",
-                dc_relation: "Limited Run",
-                dc_coverage: "North America",
-                dc_rights: "© Nike, Inc.",
-                colorway: "Solar Red/White",
-                rarity: "Rare"
-            },
-            { 
-                id: 4, 
-                dc_title: "RPM Backpack - Triple Black (Matte)",
-                dc_identifier: "BA3241-010", 
-                dc_date: "2018", 
-                dc_creator: "Nike SB Design Team",
-                dc_subject: "Minimalist Design; Water-Resistant",
-                dc_description: "A streamlined 'Triple Black' version with matte hardware and high-density water-resistant coating.",
-                dc_publisher: "Nike, Inc.",
-                dc_contributor: "Apparel Team",
-                dc_type: "Physical Object",
-                dc_format: "Textile; Coated Polyester",
-                dc_source: "Fall 2018 Release",
-                dc_language: "en-US",
-                dc_relation: "Standard Carryover",
-                dc_coverage: "Global",
-                dc_rights: "© Nike, Inc.",
-                colorway: "Black/Black/Black",
-                rarity: "Common"
-            },
-            { 
-                id: 5, 
-                dc_title: "RPM Backpack - Floral Camo",
-                dc_identifier: "BA5404-010", 
-                dc_date: "2016", 
-                dc_creator: "Nike SB Design Team",
-                dc_subject: "Lifestyle; Patterned Textiles",
-                dc_description: "Part of the seasonal Floral collection, utilizing a custom-printed textile that varied per cut, making each bag unique.",
-                dc_publisher: "Nike, Inc.",
-                dc_contributor: "Graphic Design Unit",
-                dc_type: "Physical Object",
-                dc_format: "Printed Textile",
-                dc_source: "Summer 2016 Lookbook",
-                dc_language: "en-US",
-                dc_relation: "Floral Collection",
-                dc_coverage: "Select SB Accounts",
-                dc_rights: "© Nike, Inc.",
-                colorway: "Multi/Black",
-                rarity: "Rare"
-            },
-            { 
-                id: 6, 
-                dc_title: "RPM Backpack - Desert Camo",
-                dc_identifier: "BA3241-210", 
-                dc_date: "2017", 
-                dc_creator: "Nike SB Design Team",
-                dc_subject: "Tactical; Earth Tones",
-                dc_description: "Six-color chocolate chip desert camo pattern applied to the standard RPM silhouette.",
-                dc_publisher: "Nike, Inc.",
-                dc_contributor: "Design Unit",
-                dc_type: "Physical Object",
-                dc_format: "Textile; 600D Polyester",
-                dc_source: "Holiday 2017 Release",
-                dc_language: "en-US",
-                dc_relation: "Camo Series",
-                dc_coverage: "Global",
-                dc_rights: "© Nike, Inc.",
-                colorway: "Desert/Black",
-                rarity: "Uncommon"
+        // The catalog lives in data/master_metadata.csv (one row per SKU). Edit the CSV, not this page.
+        const DATA_URL = 'data/master_metadata.csv';
+
+        // The 15 Dublin Core elements, in display order. The CSV's `sku` column is DC.identifier.
+        const DC_FIELDS = ['title', 'identifier', 'date', 'creator', 'subject', 'description', 'publisher', 'contributor', 'type', 'format', 'source', 'language', 'relation', 'coverage', 'rights'];
+
+        // Bags without a DC title fall back to the CSV's short name.
+        const titleOf = (item) => item.dc_title || item.name || item.dc_identifier;
+
+        // RFC 4180 CSV: quoted fields may contain commas, line breaks and doubled quotes ("").
+        const parseCSV = (text) => {
+            const rows = [];
+            let row = [], field = '', inQuotes = false;
+            text = text.replace(/^\uFEFF/, '');
+            for (let i = 0; i < text.length; i++) {
+                const c = text[i];
+                if (inQuotes) {
+                    if (c === '"' && text[i + 1] === '"') { field += '"'; i++; }
+                    else if (c === '"') inQuotes = false;
+                    else field += c;
+                } else if (c === '"' && field === '') {
+                    inQuotes = true;
+                } else if (c === ',') {
+                    row.push(field); field = '';
+                } else if (c === '\n' || c === '\r') {
+                    if (c === '\r' && text[i + 1] === '\n') i++;
+                    row.push(field); rows.push(row); row = []; field = '';
+                } else {
+                    field += c;
+                }
             }
-        ];
+            if (field !== '' || row.length) { row.push(field); rows.push(row); }
+            const [header, ...body] = rows.filter(r => r.some(cell => cell.trim() !== ''));
+            return body.map(r => Object.fromEntries(header.map((key, j) => [key.trim(), (r[j] || '').trim()])));
+        };
 
         const ESSAYS = [
             {
@@ -235,6 +128,8 @@
         ];
 
         const App = () => {
+            const [data, setData] = useState([]);
+            const [loadError, setLoadError] = useState(null);
             const [view, setView] = useState('intro'); // intro, catalog, essay
             const [activeEssay, setActiveEssay] = useState(ESSAYS[0]);
             const [searchTerm, setSearchTerm] = useState('');
@@ -242,16 +137,26 @@
             const [selectedItem, setSelectedItem] = useState(null);
             const [showDC, setShowDC] = useState(false);
 
-            const years = ['All', ...new Set(INITIAL_DATA.map(item => item.dc_date))].sort((a, b) => b - a);
+            useEffect(() => {
+                fetch(DATA_URL, { cache: 'no-cache' })
+                    .then(res => {
+                        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                        return res.text();
+                    })
+                    .then(text => setData(parseCSV(text).map((row, i) => ({ ...row, id: i, dc_identifier: row.sku }))))
+                    .catch(err => setLoadError(err.message));
+            }, []);
+
+            const years = ['All', ...[...new Set(data.map(item => item.dc_date).filter(Boolean))].sort((a, b) => b - a)];
 
             const filteredData = useMemo(() => {
-                return INITIAL_DATA.filter(item => {
-                    const matchesSearch = item.dc_title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                return data.filter(item => {
+                    const matchesSearch = titleOf(item).toLowerCase().includes(searchTerm.toLowerCase()) ||
                                           item.dc_identifier.toLowerCase().includes(searchTerm.toLowerCase());
                     const matchesYear = selectedYear === 'All' || item.dc_date === selectedYear;
                     return matchesSearch && matchesYear;
                 });
-            }, [searchTerm, selectedYear]);
+            }, [data, searchTerm, selectedYear]);
 
             const navigate = (newView) => {
                 setView(newView);
@@ -369,6 +274,12 @@
                                     </div>
                                 </section>
 
+                                {(loadError || data.length === 0) && (
+                                    <p className="mono text-xs text-zinc-500 uppercase tracking-widest mb-8">
+                                        {loadError ? `Could not load ${DATA_URL} (${loadError})` : 'Loading archive…'}
+                                    </p>
+                                )}
+
                                 <div className="archive-grid">
                                     {filteredData.map((item) => (
                                         <div 
@@ -379,15 +290,17 @@
                                             <div className="mb-10">
                                                <div className="bg-zinc-900 w-full aspect-square flex items-center justify-center relative border border-zinc-800">
                                                   <Icon name="package" className="w-20 h-20 text-zinc-800 group-hover:text-orange-600 transition-all" />
-                                                  <div className="absolute bottom-6 left-6 bg-orange-600 text-white text-[9px] font-black px-3 py-1 uppercase italic tracking-widest">
-                                                    {item.rarity}
-                                                  </div>
+                                                  {item.rarity && (
+                                                    <div className="absolute bottom-6 left-6 bg-orange-600 text-white text-[9px] font-black px-3 py-1 uppercase italic tracking-widest">
+                                                      {item.rarity}
+                                                    </div>
+                                                  )}
                                                </div>
                                             </div>
                                             <div className="space-y-2">
                                               <p className="mono text-[11px] text-orange-500 font-bold tracking-tighter">DC.IDENTIFIER: {item.dc_identifier}</p>
-                                              <h3 className="font-black text-xl uppercase leading-tight italic">{item.dc_title}</h3>
-                                              <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">{item.dc_date} Archive</p>
+                                              <h3 className="font-black text-xl uppercase leading-tight italic">{titleOf(item)}</h3>
+                                              <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">{item.dc_date ? `${item.dc_date} Archive` : item.era}</p>
                                             </div>
                                         </div>
                                     ))}
@@ -452,7 +365,7 @@
                                     <button onClick={() => setSelectedItem(null)} className="mb-16 text-zinc-500 hover:text-white uppercase font-black text-xs tracking-[0.3em] flex items-center gap-3">
                                         <Icon name="chevron-left" /> Back
                                     </button>
-                                    <h2 className="text-5xl font-black uppercase italic leading-none tracking-tighter mb-12">{selectedItem.dc_title}</h2>
+                                    <h2 className="text-5xl font-black uppercase italic leading-none tracking-tighter mb-12">{titleOf(selectedItem)}</h2>
                                     
                                     <div className="flex border-b border-zinc-900 mb-10">
                                         <button onClick={() => setShowDC(false)} className={`px-6 py-4 text-[10px] font-black tracking-widest uppercase border-b-2 transition-colors ${!showDC ? 'border-orange-600 text-white' : 'border-transparent text-zinc-500'}`}>General</button>
@@ -461,25 +374,31 @@
 
                                     {showDC ? (
                                         <div className="grid grid-cols-1 gap-6 bg-zinc-900/40 p-8 border border-zinc-900 animate-in fade-in">
-                                            {Object.entries(selectedItem).filter(([key]) => key.startsWith('dc_')).map(([key, value]) => (
-                                                <div key={key} className="border-b border-zinc-800 pb-4 last:border-0">
-                                                    <span className="dc-label uppercase block mb-1">DC.{key.split('_')[1]}</span>
-                                                    <span className="mono text-xs text-zinc-400">{value}</span>
+                                            {DC_FIELDS.filter(field => selectedItem[`dc_${field}`]).map(field => (
+                                                <div key={field} className="border-b border-zinc-800 pb-4 last:border-0">
+                                                    <span className="dc-label uppercase block mb-1">DC.{field}</span>
+                                                    <span className="mono text-xs text-zinc-400">{selectedItem[`dc_${field}`]}</span>
                                                 </div>
                                             ))}
                                         </div>
                                     ) : (
                                         <div className="space-y-12 animate-in fade-in">
-                                            <p className="text-zinc-300 text-xl leading-relaxed italic">{selectedItem.dc_description}</p>
+                                            <p className="text-zinc-300 text-xl leading-relaxed italic">{selectedItem.dc_description || selectedItem.notes}</p>
+                                            {selectedItem.dc_description && selectedItem.notes && (
+                                                <div>
+                                                    <p className="text-[10px] text-zinc-500 font-bold mb-1">NOTES</p>
+                                                    <p className="text-zinc-400 leading-relaxed">{selectedItem.notes}</p>
+                                                </div>
+                                            )}
                                             <div className="grid grid-cols-2 gap-4">
-                                                <div className="p-6 bg-zinc-900 border border-zinc-800">
-                                                    <p className="text-[10px] text-zinc-500 font-bold mb-1">YEAR</p>
-                                                    <p className="text-2xl font-black italic">{selectedItem.dc_date}</p>
-                                                </div>
-                                                <div className="p-6 bg-zinc-900 border border-zinc-800">
-                                                    <p className="text-[10px] text-zinc-500 font-bold mb-1">RARITY</p>
-                                                    <p className="text-2xl font-black italic text-orange-500">{selectedItem.rarity}</p>
-                                                </div>
+                                                {[['YEAR', selectedItem.dc_date], ['RARITY', selectedItem.rarity], ['ERA', selectedItem.era], ['STATUS', selectedItem.status]]
+                                                    .filter(([, value]) => value)
+                                                    .map(([label, value]) => (
+                                                        <div key={label} className="p-6 bg-zinc-900 border border-zinc-800">
+                                                            <p className="text-[10px] text-zinc-500 font-bold mb-1">{label}</p>
+                                                            <p className={`text-2xl font-black italic ${label === 'RARITY' ? 'text-orange-500' : ''}`}>{value}</p>
+                                                        </div>
+                                                    ))}
                                             </div>
                                         </div>
                                     )}
