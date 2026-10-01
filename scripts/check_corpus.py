@@ -98,8 +98,16 @@ def main():
     check_ids("rpm-gaps", gaps, "gap_id", r"RPM-GAP-\d{3}")
     by_unit = {u["unit_id"]: u for u in units}
 
-    def has_photo(unit):
-        return bool(clean(unit.get("label_photo", "")))
+    def photo_path(unit):
+        photo = clean(unit.get("label_photo", ""))
+        if not photo:
+            return ""
+        return photo if "/" in photo else os.path.join("photos", "labels", photo)
+
+    def photo_public(unit):
+        # The witness is auditable only if its label photograph is published with the corpus.
+        path = photo_path(unit)
+        return bool(path) and os.path.exists(path)
 
     for u in units:
         where = f"rpm-units {u['unit_id']}"
@@ -113,13 +121,10 @@ def main():
             missing = [f for f in CONSTRUCTION if not u[f]]
             if missing:
                 err(where, f"in_hand unit is missing construction fields: {', '.join(missing)} (use [confirm] if not yet read)")
-        if not has_photo(u):
-            warn(where, "no label photograph recorded")
-        else:
-            photo = clean(u["label_photo"])
-            path = photo if "/" in photo else os.path.join("photos", "labels", photo)
-            if not os.path.exists(path):
-                warn(where, f"label photograph '{photo}' is not in the repository (fine if it lives in Drive; the site will not show it)")
+        if not photo_path(u):
+            err(where, "no label photograph recorded (photograph before transcription, or the unit is not logged)")
+        elif not photo_public(u):
+            warn(where, f"label photograph '{clean(u['label_photo'])}' is not in the repository; the unit cannot witness an attested code until it is")
         ref = clean(u["source_ref"])
         if ref.startswith("RPM-SOURCE-") and ref not in source_ids:
             err(where, f"source_ref '{ref}' does not exist")
@@ -137,8 +142,8 @@ def main():
                 err(where, f"{key} '{s}' does not exist")
         if status not in CODE_STATUS:
             err(where, f"status '{c['status']}' must be one of {sorted(CODE_STATUS)}")
-        elif status == "attested" and not any(w in by_unit and has_photo(by_unit[w]) for w in witnesses):
-            err(where, "attested, but no witness unit carries a label photograph (no code without a witness)")
+        elif status == "attested" and not any(w in by_unit and photo_public(by_unit[w]) for w in witnesses):
+            err(where, "attested, but no witness unit has its label photograph in the repository (no code without a public witness)")
         elif status == "reported" and not (clean(c["release_source_id"]) or clean(c["first_documented_source_id"])):
             err(where, "reported, but no source_id points at dated documentary evidence")
 
