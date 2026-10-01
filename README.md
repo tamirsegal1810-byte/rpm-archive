@@ -18,7 +18,7 @@ Evidence and argument are kept in separate files. A bag is recorded once, as wha
 | `corpus/rpm-sessions.csv` | work session | Session log; `next_action` is the load-bearing field. |
 | `legacy/catalog.csv` | style code | The catalog published before 1 October 2026. Not corpus: nothing in it is backed by a logged unit or source. A row leaves when its first unit is logged. |
 
-The column sets are the canonical schemas from the project's intake system. Leave a field empty when it was not read; write `[confirm]` for a field still to be read and `[infer]` for one taken from context. Both markers are meant to stay in place and show on the site as small flags.
+The column sets are the canonical schemas from the project's intake system. These repository files are the canonical corpus; the header-only copies in the Drive folder `01-corpus` are retired (a note there points here). Photographs stay in Drive. Leave a field empty when it was not read; write `[confirm]` for a field still to be read and `[infer]` for one taken from context. Both markers are meant to stay in place and show on the site as small flags.
 
 The three dates never share a column: `production_date` (from the label, on the unit), `release_date` (from a dated source, on the code), `first_documented` (earliest dated mention).
 
