@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nike SB RPM Master Archive</title>
+    <title>Nike SB RPM Archive</title>
     <meta name="description" content="A documentary corpus of the Nike SB bags line. Each bag is recorded as a physical unit from its interior label; dating and periodisation arguments are kept apart as claims that cite those units.">
     <meta name="keywords" content="Nike SB, RPM Backpack, Nike Backpack, Skateboarding, Archive, BA2037, BA2449, Nike Collector">
-    <meta property="og:title" content="Nike SB RPM Master Archive">
+    <meta property="og:title" content="Nike SB RPM Archive">
     <meta property="og:description" content="A documentary corpus of the Nike SB bags line, built from interior labels.">
     <meta property="og:type" content="website">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -131,7 +131,7 @@
         <div class="wrap">
             <div class="head-row">
                 <div>
-                    <p class="site-title"><a href="#/">Nike SB RPM Master Archive</a></p>
+                    <p class="site-title"><a href="#/">Nike SB RPM Archive</a></p>
                     <p class="site-sub">A documentary corpus of the Nike SB bags line, 2007 to the present</p>
                 </div>
                 <div class="mode" role="group" aria-label="Reading mode">
@@ -147,7 +147,7 @@
 
     <footer class="site">
         <div class="wrap">
-            <p>Nike SB RPM Master Archive, 2026. Data and source code: <a href="https://github.com/tamirsegal1810-byte/rpm-archive">github.com/tamirsegal1810-byte/rpm-archive</a>.</p>
+            <p>Nike SB RPM Archive, 2026. Data and source code: <a href="https://github.com/tamirsegal1810-byte/rpm-archive">github.com/tamirsegal1810-byte/rpm-archive</a>.</p>
             <p>An independent collector's archive, not affiliated with Nike, Inc.</p>
         </div>
     </footer>
@@ -160,7 +160,7 @@
     // directly and joins them here; there is no build step. Edit the
     // CSVs, never this page, to change what the archive records.
     // ---------------------------------------------------------------
-    const SITE = 'Nike SB RPM Master Archive';
+    const SITE = 'Nike SB RPM Archive';
     const REPO_URL = 'https://github.com/tamirsegal1810-byte/rpm-archive';
     const FILES = {
         units: 'corpus/rpm-units.csv',
@@ -293,7 +293,16 @@
     const dl = pairs => `<dl class="record">${pairs.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${v}</dd>`).join('')}</dl>`;
     const today = () => new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
     const permalink = path => location.href.split('#')[0] + H(path);
-    const cite = (what, path) => `<h2>Cite this record</h2><p class="cite">${SITE}, ${what}, <span class="mono">${esc(permalink(path))}</span>, accessed ${today()}.</p>`;
+    // The permalink is a stable identifier, not a fixed text: the record changes when the CSVs
+    // change. The corpus version (the last commit that touched corpus/) pins the exact text cited;
+    // its link opens that commit's frozen copy of the files. Omitted if GitHub cannot be reached.
+    let corpusVersion = null;
+    const cite = (what, path) => {
+        const v = corpusVersion
+            ? `, corpus version <a class="mono" href="${REPO_URL}/tree/${esc(corpusVersion.sha)}/corpus">${esc(corpusVersion.sha.slice(0, 7))}</a> (${esc(corpusVersion.date)})`
+            : '';
+        return `<h2>Cite this record</h2><p class="cite">${SITE}, ${what}, <span class="mono">${esc(permalink(path))}</span>${v}, accessed ${today()}.</p>`;
+    };
     function photo(value, folder, caption) {
         const v = clean(value);
         if (!v) return '';
@@ -566,6 +575,7 @@
             date: 'Jan 2026',
             author: 'T. Segal',
             claims: ['RPM-CLAIM-001', 'RPM-CLAIM-002', 'RPM-CLAIM-003', 'RPM-CLAIM-004'],
+            notice: 'Written in January 2026, before the corpus existed. Its historical statements are held as claims RPM-CLAIM-001 to RPM-CLAIM-004, all speculative until units and dated sources are logged to cite. The essay will be rewritten once they are.',
             html: `<div class="essay-body">
                 <p class="lead">The Nike SB RPM Year Zero model, formally cataloged as <strong>BA2037-089/222</strong>, represents the pivotal moment when the RPM backpack transitioned from a conceptual idea to a tangible, repeatable product accessible to skateboarders everywhere.</p>
                 <h4>I. Introduction: The Significance of BA2037</h4>
@@ -613,6 +623,7 @@
                 <p class="label">Essay ${esc(essay.id.replace('essay-', ''))} · ${esc(essay.date)}</p>
                 <h1 class="page">${esc(essay.title)}</h1>
                 <p class="subtitle">${esc(essay.subtitle)}</p>
+                ${essay.notice ? `<p class="banner">${linkIds(esc(essay.notice))}</p>` : ''}
                 ${essay.html}
                 ${claims.length ? `<h3>Claims this essay makes</h3>${claimList(claims)}` : ''}
                 <p class="byline">${esc(essay.author)}, ${esc(essay.date)}</p>
@@ -688,6 +699,15 @@
             .then(text => { const { header, body } = parseCSV(text); HEADERS[key] = header; D[key] = body; })
             .catch(err => loadErrors.push(err.message))
     )).then(() => { loaded = true; render(); });
+    fetch('https://api.github.com/repos/tamirsegal1810-byte/rpm-archive/commits?path=corpus&per_page=1')
+        .then(res => res.ok ? res.json() : Promise.reject(new Error(`HTTP ${res.status}`)))
+        .then(list => {
+            const c = list && list[0];
+            if (!c || !c.sha) return;
+            corpusVersion = { sha: c.sha, date: (c.commit && c.commit.committer && c.commit.committer.date || '').slice(0, 10) };
+            if (loaded) render();
+        })
+        .catch(() => { /* citation falls back to permalink and access date */ });
     </script>
 </body>
 </html>

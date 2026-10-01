@@ -1,4 +1,4 @@
-# Nike SB RPM Master Archive
+# Nike SB RPM Archive
 
 A documentary corpus of the Nike SB bags line (the RPM backpack and the models released alongside it), built from primary evidence: interior labels, construction, and dated sources.
 
@@ -28,7 +28,7 @@ The three dates never share a column: `production_date` (from the label, on the 
 
 Every record has one address, the same in both reading modes:
 
-- `#/unit/RPM-UNIT-001`: a physical bag. The permanent, citable unit of the archive.
+- `#/unit/RPM-UNIT-001`: a physical bag, the archive's basic unit. The address is stable, but the record behind it changes as the CSVs change.
 - `#/code/BA2037`: all units, register entries and legacy rows under one base code.
 - `#/claim/RPM-CLAIM-001`, `#/gap/RPM-GAP-001`, `#/source/RPM-SOURCE-001`
 - `#/legacy/BA2037-089`: a pre-corpus entry.
@@ -36,11 +36,15 @@ Every record has one address, the same in both reading modes:
 
 **General** mode shows the bag, and only units that a live claim cites. **Scholarly** mode shows the full witness record, every unit, the claims, gaps and sources, and the `[confirm]` flags.
 
-Label photographs go in `photos/labels/`, hangtags in `photos/hangtags/`, with the file named after the unit (`RPM-UNIT-001.jpg`). The unit's `label_photo` field holds the file name.
+Label photographs go in `photos/labels/`, hangtags in `photos/hangtags/`, with the file named after the unit (`RPM-UNIT-001.jpg`). The unit's `label_photo` field holds the file name. A code counts as `attested` only when a witness unit's label photograph is published here, so anyone can trace a claim to the unit, the photograph and the transcription without access to private storage. Full-resolution originals stay in Drive.
+
+### Citing
+
+Each record page gives a citation with its address, the corpus version (the last commit that changed `corpus/`, linked to that commit's frozen copy of the files) and the access date. The version is what pins the exact text cited. A tagged release with a Zenodo DOI will follow once the first units are logged.
 
 ## Logging a unit
 
-1. Photograph the interior label (and hangtag, if present).
+1. Photograph the interior label (and hangtag, if present). Put the label crop in `photos/labels/<unit_id>.jpg`.
 2. Add one row to `corpus/rpm-units.csv`: label fields first, in the fixed reading order, then construction. Declare custody.
 3. If this is the first photographed unit of its code, add or update the code's row in `corpus/rpm-codes.csv`.
 4. If the code was in `legacy/catalog.csv`, delete that row.
@@ -49,7 +53,7 @@ Label photographs go in `photos/labels/`, hangtags in `photos/hangtags/`, with t
 ## Checking changes
 
 ```bash
-python3 scripts/check_corpus.py   # schemas, ids, references, witness rule, construction fields
+python3 scripts/check_corpus.py   # schemas, ids, references, public-witness rule, construction fields
 python3 -m http.server            # then open http://localhost:8000
 ```
 
