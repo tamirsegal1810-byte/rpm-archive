@@ -4,17 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nike SB RPM Master Archive</title>
-    <meta name="description" content="A catalog of the Nike SB RPM backpack by style code, 2007 to the present, with essays on its history. Each record follows the Dublin Core metadata elements.">
-    <meta name="keywords" content="Nike SB, RPM Backpack, Nike Backpack, Skateboarding, Archive, BA5403, BA2037, Nike Collector">
+    <meta name="description" content="A documentary corpus of the Nike SB bags line. Each bag is recorded as a physical unit from its interior label; dating and periodisation arguments are kept apart as claims that cite those units.">
+    <meta name="keywords" content="Nike SB, RPM Backpack, Nike Backpack, Skateboarding, Archive, BA2037, BA2449, Nike Collector">
     <meta property="og:title" content="Nike SB RPM Master Archive">
-    <meta property="og:description" content="Catalog and essays on the Nike SB RPM backpack, 2007 to the present.">
+    <meta property="og:description" content="A documentary corpus of the Nike SB bags line, built from interior labels.">
     <meta property="og:type" content="website">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600&family=Source+Sans+3:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <style>
         :root {
             --paper: #faf8f4;
@@ -26,6 +23,8 @@
             --rule-2: #e9e5dc;
             --accent: #8b3a3a;
             --accent-2: #632626;
+            --flag: #8a6a1f;
+            --flag-bg: #f5ecd6;
             --serif: "Source Serif 4", "Iowan Old Style", Palatino, Georgia, serif;
             --sans: "Source Sans 3", "Helvetica Neue", Arial, sans-serif;
             --mono: "Source Code Pro", Menlo, Consolas, monospace;
@@ -43,22 +42,29 @@
         .label { font-family: var(--sans); font-size: 0.76rem; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase; color: var(--ink-2); margin: 0 0 0.5rem; }
         .note, .links { font-family: var(--sans); font-size: 0.95rem; color: var(--ink-2); }
         .lead { font-size: 1.2rem; line-height: 1.5; }
+        .muted { color: var(--ink-3); }
         h1.page { font-size: 2rem; font-weight: 600; line-height: 1.15; letter-spacing: -0.01em; margin: 0 0 1.25rem; }
         h2 { font-size: 1.3rem; font-weight: 600; line-height: 1.25; margin: 2.25rem 0 0.75rem; }
+        h3 { font-family: var(--sans); font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-2); margin: 1.75rem 0 0.6rem; }
 
-        /* Header and navigation */
+        /* Header, navigation, mode switch */
         header.site { border-bottom: 1px solid var(--rule); padding-top: 1.5rem; }
+        .head-row { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 0.75rem 1.5rem; }
         .site-title { font-size: 1.45rem; font-weight: 600; letter-spacing: -0.01em; margin: 0; }
         .site-title a { color: inherit; text-decoration: none; }
         .site-sub { font-family: var(--sans); font-size: 0.95rem; color: var(--ink-2); margin: 0.2rem 0 0; }
+        .mode { display: inline-flex; border: 1px solid var(--rule); border-radius: 2px; font-family: var(--sans); font-size: 0.85rem; }
+        .mode button { font: inherit; color: var(--ink-2); background: transparent; border: 0; padding: 0.35rem 0.75rem; cursor: pointer; }
+        .mode button + button { border-left: 1px solid var(--rule); }
+        .mode button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
         nav.primary { display: flex; flex-wrap: wrap; gap: 0 1.75rem; margin-top: 1rem; font-family: var(--sans); font-size: 0.95rem; }
         nav.primary a { color: var(--ink-2); text-decoration: none; padding: 0.5rem 0 0.7rem; border-bottom: 2px solid transparent; margin-bottom: -1px; }
         nav.primary a:hover { color: var(--ink); }
         nav.primary a[aria-current="page"] { color: var(--accent); border-bottom-color: var(--accent); }
         main.wrap { padding-top: 2.5rem; padding-bottom: 4rem; }
 
-        /* Catalog register */
-        .search { margin: 1.25rem 0 1.5rem; }
+        /* Registers */
+        .search { margin: 1.25rem 0 0.5rem; }
         .search input { display: block; width: 100%; max-width: 26rem; font-family: var(--sans); font-size: 1rem; color: var(--ink); background: #fff; border: 1px solid var(--rule); border-radius: 2px; padding: 0.5rem 0.7rem; }
         .table-wrap { overflow-x: auto; }
         table.register { width: 100%; border-collapse: collapse; font-size: 0.97rem; font-variant-numeric: tabular-nums; }
@@ -66,18 +72,27 @@
         .register th button { font: inherit; color: inherit; letter-spacing: inherit; text-transform: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
         .register th button:hover, .register th[aria-sort="ascending"] button, .register th[aria-sort="descending"] button { color: var(--accent); }
         .register td { padding: 0.55rem 1rem 0.55rem 0; border-bottom: 1px solid var(--rule-2); vertical-align: top; }
-        .register tbody tr { cursor: pointer; }
-        .register tbody tr:hover { background: var(--paper-2); }
-        .register td.col-sku { white-space: nowrap; }
-        .register td.col-sku a { text-decoration: none; }
-        .register td.col-sku a:hover { text-decoration: underline; }
+        .register tbody tr[data-href] { cursor: pointer; }
+        .register tbody tr[data-href]:hover { background: var(--paper-2); }
+        .register td.nowrap { white-space: nowrap; }
+        .register td a { text-decoration: none; }
+        .register td a:hover { text-decoration: underline; }
 
-        /* Record page */
+        /* Records */
         dl.record { display: grid; grid-template-columns: 11rem 1fr; gap: 0.45rem 1.5rem; margin: 0; }
         dl.record dt { font-family: var(--sans); font-size: 0.88rem; color: var(--ink-2); padding-top: 0.18rem; }
-        dl.record dd { margin: 0; }
-        .term { color: var(--ink-3); font-size: 0.72rem; margin-left: 0.3rem; }
+        dl.record dd { margin: 0; overflow-wrap: anywhere; }
+        .flag { display: inline-block; font-family: var(--sans); font-size: 0.7rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--flag); background: var(--flag-bg); border-radius: 2px; padding: 0 0.35rem; vertical-align: 0.1em; }
+        .status { font-family: var(--sans); font-size: 0.8rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink-2); }
+        .status-retracted { color: var(--accent); text-decoration: line-through; }
+        .banner { font-family: var(--sans); font-size: 0.95rem; color: var(--ink-2); background: var(--paper-2); border-left: 2px solid var(--rule); padding: 0.75rem 1rem; margin: 0 0 1.5rem; }
+        .linkish { font: inherit; color: var(--accent); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.16em; }
         .cite { font-size: 0.97rem; background: var(--paper-2); border-left: 2px solid var(--rule); padding: 0.85rem 1rem; overflow-wrap: anywhere; }
+        figure.photo { margin: 0 0 1.5rem; }
+        figure.photo img { display: block; max-width: 100%; height: auto; border: 1px solid var(--rule); }
+        figure.photo figcaption { font-family: var(--sans); font-size: 0.85rem; color: var(--ink-2); margin-top: 0.35rem; }
+        ul.plain { list-style: none; padding: 0; margin: 0; }
+        ul.plain li { padding: 0.5rem 0; border-bottom: 1px solid var(--rule-2); }
         nav.pager { display: flex; justify-content: space-between; gap: 1rem; margin-top: 2.5rem; font-family: var(--sans); font-size: 0.95rem; }
 
         /* Essays */
@@ -99,357 +114,580 @@
         @media (max-width: 640px) {
             body { font-size: 1.0625rem; }
             h1.page { font-size: 1.7rem; }
-            .register .col-rarity, .register .col-date, .register .col-era { display: none; }
+            .register .wide { display: none; }
             .register th:last-child, .register td:last-child { padding-right: 0; }
             dl.record { grid-template-columns: 1fr; gap: 0.1rem; }
             dl.record dt { margin-top: 0.8rem; }
         }
         @media print {
-            nav.primary, .search, nav.pager, aside.index { display: none; }
+            nav.primary, .mode, .search, nav.pager, aside.index { display: none; }
             body { background: #fff; }
             a { color: inherit; text-decoration: none; }
         }
     </style>
 </head>
 <body>
-    <div id="root"></div>
-
-    <script type="text/babel">
-        const { useState, useMemo, useEffect } = React;
-
-        // The catalog lives in data/master_metadata.csv (one row per SKU). Edit the CSV, not this page.
-        const DATA_URL = 'data/master_metadata.csv';
-        const REPO_URL = 'https://github.com/tamirsegal1810-byte/rpm-archive';
-        const CSV_URL = REPO_URL + '/blob/main/data/master_metadata.csv';
-
-        // The 15 Dublin Core elements, in display order. The CSV's `sku` column is dc:identifier.
-        const DC_FIELDS = ['title', 'identifier', 'date', 'creator', 'subject', 'description', 'publisher', 'contributor', 'type', 'format', 'source', 'language', 'relation', 'coverage', 'rights'];
-        // The collector's own columns, kept alongside the Dublin Core record.
-        const CATALOG_FIELDS = [['name', 'Name'], ['era', 'Era'], ['status', 'Status'], ['colorway', 'Colorway'], ['rarity', 'Rarity'], ['notes', 'Notes']];
-
-        // Bags without a DC title fall back to the CSV's short name.
-        const titleOf = (item) => item.dc_title || item.name || item.dc_identifier;
-        const capitalize = (s) => s.charAt(0).toUpperCase() + s.slice(1);
-
-        // RFC 4180 CSV: quoted fields may contain commas, line breaks and doubled quotes ("").
-        const parseCSV = (text) => {
-            const rows = [];
-            let row = [], field = '', inQuotes = false;
-            text = text.replace(/^\uFEFF/, '');
-            for (let i = 0; i < text.length; i++) {
-                const c = text[i];
-                if (inQuotes) {
-                    if (c === '"' && text[i + 1] === '"') { field += '"'; i++; }
-                    else if (c === '"') inQuotes = false;
-                    else field += c;
-                } else if (c === '"' && field === '') {
-                    inQuotes = true;
-                } else if (c === ',') {
-                    row.push(field); field = '';
-                } else if (c === '\n' || c === '\r') {
-                    if (c === '\r' && text[i + 1] === '\n') i++;
-                    row.push(field); rows.push(row); row = []; field = '';
-                } else {
-                    field += c;
-                }
-            }
-            if (field !== '' || row.length) { row.push(field); rows.push(row); }
-            const [header, ...body] = rows.filter(r => r.some(cell => cell.trim() !== ''));
-            return body.map(r => Object.fromEntries(header.map((key, j) => [key.trim(), (r[j] || '').trim()])));
-        };
-        const ESSAYS = [
-            {
-                id: "essay-01",
-                title: "Nike SB RPM Year Zero",
-                subtitle: "The Foundational Chassis (BA2037)",
-                date: "Jan 2026",
-                author: "T. Segal",
-                content: (
-                    <div className="essay-body">
-                        <p className="lead">The Nike SB RPM Year Zero model, formally cataloged as <strong>BA2037-089/222</strong>, represents the pivotal moment when the RPM backpack transitioned from a conceptual idea to a tangible, repeatable product accessible to skateboarders everywhere.</p>
-                        
-                        <h4>I. Introduction: The Significance of BA2037</h4>
-                        <p>In the simplest terms, BA2037 is recognized as the first Nike SB RPM chassis to be made available for public sale—unless credible evidence emerges identifying an earlier, widely retailed RPM release. Framing BA2037 as "Year Zero" provides both honesty and clarity to the story, offering researchers and collectors a definitive reference point from which all subsequent developments can be measured.</p>
-
-                        <h4>II. Pre-History: Incubation and Early Previews</h4>
-                        <p>Before the release of BA2037, there was an important period of incubation. In 2006, media previews surfaced showing elephant or cement-print SB backpacks and similar layouts designed for skate functionality. These early sightings should be seen as experimental hints—important precursors but not yet representing the finalized, retail-proven RPM system.</p>
-
-                        <h4>III. The Gold Box Era and Public Launch</h4>
-                        <p>By late 2007 and early 2008, coinciding with Nike SB’s "Gold Box" era, the production-ready RPM arrived in the form of BA2037-089 (black) and BA2037-222 (tan/olive). These two models launched simultaneously, signaling the introduction of a stable and repeatable platform rather than a one-off novelty. Early shop coverage from 2008 confirms that these backpacks were widely available, which validates BA2037’s claim as the first publicly sold RPM.</p>
-
-                        <h4>IV. The BA2037 Chassis: Defining Features</h4>
-                        <p>What sets BA2037 apart as a true chassis, rather than just a style, is its consistent feature set. The backpack includes board-carry straps, a padded laptop sleeve, a practical pocket configuration, a durable woven body, and MOLLE webbing for attachments—all specifically designed for the demands of daily skateboarding. The iconic elephant print is utilized with restraint, appearing only on the bottom panel and as two narrow reinforcement strips on the lower front straps.</p>
-                        <blockquote>
-                            "BA2037 is the first publicly sold Nike SB RPM chassis—until credible evidence shows an earlier, publicly retailed RPM."
-                        </blockquote>
-
-                        <h4>V. From Year Zero: Evolution and Experimentation</h4>
-                        <p>BA2037’s foundational role is evident in the subsequent evolution of the RPM line. The next iteration, BA2318-089, experimented with synthetic-leather elephant panels, exploring both finish and premium feel. Following that, BA2449-089 expanded the print coverage and enhanced hardware, reflecting growing confidence in the platform.</p>
-
-                        <h4>VI. Cultural Impact</h4>
-                        <p>By 2007–2008, Nike SB accessories were not merely afterthoughts; they were central components of skateboarding identity. BA2037 exemplifies how a sneaker icon can be faithfully transformed into a rugged, functional tool, preserving both the spirit of the original and the demands of skateboarding.</p>
-                    </div>
-                )
-            },
-            {
-                id: "essay-02",
-                title: "Methodology & Standardized Data",
-                subtitle: "The DCMI Protocol in Streetwear Archiving",
-                date: "Jan 2026",
-                author: "T. Segal",
-                content: (
-                    <div className="essay-body">
-                        <p>The digital preservation of tactical streetwear requires a shift from consumerist listing to archival documentation. This project utilizes the <strong>Dublin Core Metadata Element Set (DCMI)</strong> to categorize items based on their historical and physical properties.</p>
-                        <h4>I. The 15 Core Elements</h4>
-                        <p>To ensure longevity, every RPM record contains the fifteen core descriptors. This allows researchers to understand not just the 'What' (SKU: BA5403-010) but the 'Where' (Coverage) and the 'Who' (Contributors).</p>
-                        <blockquote>
-                            "Metadata is the last remaining footprint of physical objects in a post-analog age."
-                        </blockquote>
-                        <p>Our ongoing research focuses on material degradation. The transition from heavy polyester duck canvas to lighter recycled synthetics marks a significant shift in Nike SB's environmental policy.</p>
-                    </div>
-                )
-            }
-        ];
-
-        // Every page has an address: #/ , #/catalog , #/record/BA5403-010 , #/essays/essay-01
-        const href = (path) => '#/' + path;
-        const recordHref = (sku) => href('record/' + encodeURIComponent(sku));
-        const parseHash = () => {
-            const parts = window.location.hash.replace(/^#\/?/, '').split('/').filter(Boolean);
-            if (parts[0] === 'catalog') return { view: 'catalog' };
-            if (parts[0] === 'record' && parts[1]) return { view: 'record', sku: decodeURIComponent(parts[1]) };
-            if (parts[0] === 'essays') return { view: 'essays', id: parts[1] || ESSAYS[0].id };
-            return { view: 'intro' };
-        };
-
-        const Intro = ({ data }) => {
-            const held = data.filter(r => r.status === 'In Collection').length;
-            return (
-                <div className="measure">
-                    <h1 className="page">About this archive</h1>
-                    <p className="lead">This site documents the Nike SB RPM backpack colorway by colorway, from 2007 to the present. Each record is identified by its Nike style code and described with the Dublin Core metadata elements, so the catalog can be read, cited and reused outside this site.</p>
-                    <p className="links"><a href={href('catalog')}>Browse the catalog</a> · <a href={href('essays/' + ESSAYS[0].id)}>Read the Year Zero essay</a></p>
-
-                    <h2>Current position: Year Zero</h2>
-                    <p>This archive takes <strong>BA2037</strong> as the first publicly sold Nike SB RPM chassis. While incubation prototypes existed in 2006, BA2037 established the "fixed feature map"—board straps, laptop sleeve, MOLLE webbing—that defined the line for the next two decades.</p>
-                    <p className="note"><a href={href('essays/' + ESSAYS[0].id)}>Read the full essay</a></p>
-
-                    <h2>Scope</h2>
-                    <p>This archive serves to standardize the metadata of the RPM series, ensuring that technical design choices from 2007 to the present are preserved in a machine-readable format.</p>
-
-                    <h2>The data</h2>
-                    <p>The catalog is a single file, <a href={CSV_URL}><span className="mono">data/master_metadata.csv</span></a>, kept in the project's public repository. Every record on this site is read from that file, and corrections are made there.{data.length > 0 && <> It currently holds {data.length} records, {held} of them in the collection.</>}</p>
-                </div>
-            );
-        };
-
-        const COLUMNS = [
-            ['sku', 'SKU', 'col-sku'], ['title', 'Title', 'col-title'], ['era', 'Era', 'col-era'],
-            ['dc_date', 'Date', 'col-date'], ['status', 'Status', 'col-status'], ['rarity', 'Rarity', 'col-rarity'],
-        ];
-        const cell = (row, key) => key === 'title' ? titleOf(row) : (row[key] || '');
-
-        const Catalog = ({ data, loadError }) => {
-            const [query, setQuery] = useState('');
-            const [sort, setSort] = useState({ key: null, dir: 1 });
-
-            const rows = useMemo(() => {
-                const q = query.trim().toLowerCase();
-                const found = data.filter(r => !q || [r.sku, titleOf(r), r.name, r.era, r.colorway, r.notes].some(v => (v || '').toLowerCase().includes(q)));
-                if (!sort.key) return found;
-                return [...found].sort((a, b) => {
-                    const av = cell(a, sort.key), bv = cell(b, sort.key);
-                    if (av === '' || bv === '') return av === bv ? 0 : (av === '' ? 1 : -1); // blanks last, whichever direction
-                    return av.localeCompare(bv, undefined, { numeric: true, sensitivity: 'base' }) * sort.dir;
-                });
-            }, [data, query, sort]);
-
-            const toggle = (key) => setSort(s => s.key === key ? { key, dir: -s.dir } : { key, dir: 1 });
-            const open = (sku) => { window.location.hash = recordHref(sku); };
-
-            return (
+    <header class="site">
+        <div class="wrap">
+            <div class="head-row">
                 <div>
-                    <h1 className="page">Catalog</h1>
-                    {loadError ? (
-                        <p className="note">The catalog could not be loaded ({loadError}). It is read from <span className="mono">{DATA_URL}</span>.</p>
-                    ) : data.length === 0 ? (
-                        <p className="note">Loading the catalog…</p>
-                    ) : (
-                        <p className="note">{data.length} records{rows.length !== data.length ? `, ${rows.length} shown` : ''}. Sort by clicking a column heading; open a row for the full record.</p>
-                    )}
-                    <div className="search">
-                        <label htmlFor="q" className="label">Search</label>
-                        <input id="q" type="search" value={query} onChange={e => setQuery(e.target.value)} placeholder="SKU, name, era or note" />
-                    </div>
-                    <div className="table-wrap">
-                        <table className="register">
-                            <thead>
-                                <tr>
-                                    {COLUMNS.map(([key, label, cls]) => (
-                                        <th key={key} className={cls} scope="col" aria-sort={sort.key === key ? (sort.dir === 1 ? 'ascending' : 'descending') : 'none'}>
-                                            <button type="button" onClick={() => toggle(key)}>{label}{sort.key === key ? (sort.dir === 1 ? ' ↑' : ' ↓') : ''}</button>
-                                        </th>
-                                    ))}
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {rows.map(row => (
-                                    <tr key={row.id} onClick={() => open(row.sku)}>
-                                        {COLUMNS.map(([key, , cls]) => (
-                                            <td key={key} className={cls}>
-                                                {key === 'sku'
-                                                    ? <a className="mono" href={recordHref(row.sku)} onClick={e => e.stopPropagation()}>{row.sku}</a>
-                                                    : cell(row, key)}
-                                            </td>
-                                        ))}
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                    {data.length > 0 && rows.length === 0 && <p className="note">No records match “{query}”.</p>}
+                    <p class="site-title"><a href="#/">Nike SB RPM Master Archive</a></p>
+                    <p class="site-sub">A documentary corpus of the Nike SB bags line, 2007 to the present</p>
                 </div>
-            );
-        };
-
-        const Record = ({ data, loadError, sku }) => {
-            if (loadError) return <p className="note">The catalog could not be loaded ({loadError}).</p>;
-            if (data.length === 0) return <p className="note">Loading the catalog…</p>;
-            const index = data.findIndex(r => r.sku === sku);
-            const item = data[index];
-            if (!item) return <p className="note">There is no record with the identifier <span className="mono">{sku}</span>. <a href={href('catalog')}>Back to the catalog</a>.</p>;
-
-            const prev = data[index - 1], next = data[index + 1];
-            const entry = CATALOG_FIELDS.map(([key, label]) => [key, label, item[key]]).filter(([, , value]) => value);
-            const dc = DC_FIELDS.map(f => [f, f === 'identifier' ? item.sku : item['dc_' + f]]).filter(([, value]) => value);
-            const url = window.location.href.split('#')[0] + recordHref(item.sku);
-            const accessed = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
-
-            return (
-                <article className="measure">
-                    <p className="label">Record <span className="mono">{item.sku}</span></p>
-                    <h1 className="page">{titleOf(item)}</h1>
-
-                    {entry.length > 0 && (
-                        <>
-                            <h2>Catalog entry</h2>
-                            <dl className="record">
-                                {entry.map(([key, label, value]) => <React.Fragment key={key}><dt>{label}</dt><dd>{value}</dd></React.Fragment>)}
-                            </dl>
-                        </>
-                    )}
-
-                    <h2>Dublin Core record</h2>
-                    <dl className="record">
-                        {dc.map(([field, value]) => (
-                            <React.Fragment key={field}>
-                                <dt>{capitalize(field)}<span className="mono term">dc:{field}</span></dt>
-                                <dd>{value}</dd>
-                            </React.Fragment>
-                        ))}
-                    </dl>
-
-                    <h2>Cite this record</h2>
-                    <p className="cite">Nike SB RPM Master Archive, “{titleOf(item)}”, record {item.sku}, <span className="mono">{url}</span>, accessed {accessed}.</p>
-
-                    <nav className="pager" aria-label="Records">
-                        <span>{prev && <a href={recordHref(prev.sku)}>← {prev.sku}</a>}</span>
-                        <a href={href('catalog')}>All records</a>
-                        <span>{next && <a href={recordHref(next.sku)}>{next.sku} →</a>}</span>
-                    </nav>
-                </article>
-            );
-        };
-
-        const Essays = ({ id }) => {
-            const essay = ESSAYS.find(e => e.id === id) || ESSAYS[0];
-            return (
-                <div className="essays">
-                    <aside className="index">
-                        <p className="label">Essays</p>
-                        <ol>
-                            {ESSAYS.map(e => (
-                                <li key={e.id}><a href={href('essays/' + e.id)} aria-current={e.id === essay.id ? 'true' : undefined}>{e.title}</a></li>
-                            ))}
-                        </ol>
-                    </aside>
-                    <article className="measure">
-                        <p className="label">Essay {essay.id.replace('essay-', '')} · {essay.date}</p>
-                        <h1 className="page">{essay.title}</h1>
-                        <p className="subtitle">{essay.subtitle}</p>
-                        {essay.content}
-                        <p className="byline">{essay.author}, {essay.date}</p>
-                    </article>
+                <div class="mode" role="group" aria-label="Reading mode">
+                    <button type="button" data-mode="general">General</button>
+                    <button type="button" data-mode="scholarly">Scholarly</button>
                 </div>
-            );
+            </div>
+            <nav class="primary" id="nav" aria-label="Site"></nav>
+        </div>
+    </header>
+
+    <main class="wrap" id="main"><p class="note">Loading the corpus…</p></main>
+
+    <footer class="site">
+        <div class="wrap">
+            <p>Nike SB RPM Master Archive, 2026. Data and source code: <a href="https://github.com/tamirsegal1810-byte/rpm-archive">github.com/tamirsegal1810-byte/rpm-archive</a>.</p>
+            <p>An independent collector's archive, not affiliated with Nike, Inc.</p>
+        </div>
+    </footer>
+
+    <script>
+    'use strict';
+
+    // ---------------------------------------------------------------
+    // The corpus is the six CSV files in corpus/. This page reads them
+    // directly and joins them here; there is no build step. Edit the
+    // CSVs, never this page, to change what the archive records.
+    // ---------------------------------------------------------------
+    const SITE = 'Nike SB RPM Master Archive';
+    const REPO_URL = 'https://github.com/tamirsegal1810-byte/rpm-archive';
+    const FILES = {
+        units: 'corpus/rpm-units.csv',
+        codes: 'corpus/rpm-codes.csv',
+        sources: 'corpus/rpm-sources.csv',
+        gaps: 'corpus/rpm-gaps.csv',
+        claims: 'corpus/rpm-claims.csv',
+        legacy: 'legacy/catalog.csv',
+    };
+    const D = { units: [], codes: [], sources: [], gaps: [], claims: [], legacy: [] };
+    const HEADERS = {};
+    let loaded = false;
+    const loadErrors = [];
+
+    // ---------- CSV (RFC 4180: quoted fields may hold commas, line breaks, doubled quotes) ----------
+    function parseCSV(text) {
+        const rows = [];
+        let row = [], field = '', inQuotes = false;
+        text = text.replace(/^﻿/, '');
+        for (let i = 0; i < text.length; i++) {
+            const c = text[i];
+            if (inQuotes) {
+                if (c === '"' && text[i + 1] === '"') { field += '"'; i++; }
+                else if (c === '"') inQuotes = false;
+                else field += c;
+            } else if (c === '"' && field === '') {
+                inQuotes = true;
+            } else if (c === ',') {
+                row.push(field); field = '';
+            } else if (c === '\n' || c === '\r') {
+                if (c === '\r' && text[i + 1] === '\n') i++;
+                row.push(field); rows.push(row); row = []; field = '';
+            } else {
+                field += c;
+            }
+        }
+        if (field !== '' || row.length) { row.push(field); rows.push(row); }
+        const nonEmpty = rows.filter(r => r.some(cell => cell.trim() !== ''));
+        const header = (nonEmpty[0] || []).map(h => h.trim());
+        const body = nonEmpty.slice(1).map(r => Object.fromEntries(header.map((key, j) => [key, (r[j] || '').trim()])));
+        return { header, body };
+    }
+
+    // ---------- Values and markers ----------
+    // "[confirm]" = not yet read from evidence; "[infer]" = taken from context. Both stay in the
+    // CSV by design and render here as small flags.
+    const MARK = /\[(confirm|infer)\]/g;
+    const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const clean = v => String(v == null ? '' : v).replace(MARK, '').replace(/\s+/g, ' ').trim();
+    const flagHtml = k => `<span class="flag" title="${k === 'confirm' ? 'Not yet read from evidence' : 'Taken from context, not from evidence'}">${k}</span>`;
+    const fmt = v => esc(v).replace(MARK, (m, k) => flagHtml(k));
+    const idList = v => clean(v).split(/[;,\s]+/).filter(Boolean);
+    const DASH = '<span class="muted">—</span>';
+    const val = v => (String(v || '').trim() ? fmt(v) : DASH);
+
+    // ---------- Joins ----------
+    const unitCode = u => {
+        const s = clean(u.style_code), x = clean(u.color_suffix);
+        return s && x && !s.includes('-') ? `${s}-${x}` : s;
+    };
+    const baseOf = code => clean(code).split('-')[0];
+    const unitTitle = u => clean(u.colorway_name) || clean(u.model_name) || unitCode(u) || u.unit_id;
+    const isLive = c => !/^(retracted|superseded)$/i.test(clean(c.status));
+    const claimsCiting = uid => D.claims.filter(c => idList(c.evidence_unit_ids).includes(uid));
+    // General mode shows a unit only when a live claim cites it.
+    const inGeneral = u => claimsCiting(u.unit_id).some(isLive);
+    const byId = (list, key, id) => list.find(r => r[key] === id);
+    const unitsForBase = base => D.units.filter(u => baseOf(unitCode(u)) === base);
+    const legacyForBase = base => D.legacy.filter(r => baseOf(r.sku) === base);
+
+    // ---------- Mode ----------
+    let mode = 'general';
+    try { const m = localStorage.getItem('rpm-mode'); if (m === 'general' || m === 'scholarly') mode = m; } catch (e) { /* storage unavailable */ }
+    function setMode(m) {
+        mode = m;
+        try { localStorage.setItem('rpm-mode', m); } catch (e) { /* storage unavailable */ }
+        render();
+    }
+    const scholarly = () => mode === 'scholarly';
+
+    // ---------- Routing: every record has one address, the same in both modes ----------
+    const H = path => '#/' + path.split('/').map(encodeURIComponent).join('/');
+    const a = (path, html, cls) => `<a href="${H(path)}"${cls ? ` class="${cls}"` : ''}>${html}</a>`;
+    const unitLink = id => a('unit/' + id, esc(id), 'mono');
+    const codeLink = code => a('code/' + baseOf(code), esc(clean(code)), 'mono');
+    const refLink = id => {
+        if (byId(D.units, 'unit_id', id)) return unitLink(id);
+        if (byId(D.sources, 'source_id', id)) return a('source/' + id, esc(id), 'mono');
+        if (byId(D.claims, 'claim_id', id)) return a('claim/' + id, esc(id), 'mono');
+        if (byId(D.gaps, 'gap_id', id)) return a('gap/' + id, esc(id), 'mono');
+        return `<span class="mono">${esc(id)}</span>`;
+    };
+    // Turn corpus ids mentioned in free text into links.
+    const linkIds = html => html.replace(/\bRPM-(UNIT|SOURCE|CLAIM|GAP)-\d{3}\b/g, id => refLink(id));
+    const parseHash = () => {
+        const parts = location.hash.replace(/^#\/?/, '').split('/').filter(Boolean).map(p => { try { return decodeURIComponent(p); } catch (e) { return p; } });
+        return { view: parts[0] || 'intro', id: parts.slice(1).join('/') };
+    };
+
+    // ---------- Sortable registers ----------
+    const sorts = {};
+    let query = '';
+    function register(id, cols, rows, opts) {
+        opts = opts || {};
+        if (!rows.length) return opts.empty ? `<p class="note">${opts.empty}</p>` : '';
+        const s = sorts[id] || {};
+        let list = rows;
+        if (s.key) {
+            const col = cols.find(c => c.key === s.key);
+            list = [...rows].sort((x, y) => {
+                const av = clean(col.get(x)), bv = clean(col.get(y));
+                if (av === '' || bv === '') return av === bv ? 0 : (av === '' ? 1 : -1); // blanks last
+                return av.localeCompare(bv, undefined, { numeric: true, sensitivity: 'base' }) * s.dir;
+            });
+        }
+        const head = cols.map(c => `<th class="${c.cls || ''}" scope="col" aria-sort="${s.key === c.key ? (s.dir === 1 ? 'ascending' : 'descending') : 'none'}"><button type="button" data-sort="${id}|${c.key}">${esc(c.label)}${s.key === c.key ? (s.dir === 1 ? ' ↑' : ' ↓') : ''}</button></th>`).join('');
+        const body = list.map(row => {
+            const href = opts.href ? opts.href(row) : '';
+            const text = cols.map(c => clean(c.get(row))).join(' ').toLowerCase();
+            return `<tr${href ? ` data-href="${esc(href)}"` : ''} data-search="${esc(text)}">${cols.map(c => `<td class="${c.cls || ''}">${c.html ? c.html(row) : val(c.get(row))}</td>`).join('')}</tr>`;
+        }).join('');
+        return `<div class="table-wrap"><table class="register"><thead><tr>${head}</tr></thead><tbody>${body}</tbody></table></div>`;
+    }
+    function applyFilter() {
+        const q = query.trim().toLowerCase();
+        document.querySelectorAll('tr[data-search]').forEach(tr => { tr.hidden = !!q && !tr.dataset.search.includes(q); });
+    }
+
+    // ---------- Shared record pieces ----------
+    const dl = pairs => `<dl class="record">${pairs.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${v}</dd>`).join('')}</dl>`;
+    const today = () => new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+    const permalink = path => location.href.split('#')[0] + H(path);
+    const cite = (what, path) => `<h2>Cite this record</h2><p class="cite">${SITE}, ${what}, <span class="mono">${esc(permalink(path))}</span>, accessed ${today()}.</p>`;
+    function photo(value, folder, caption) {
+        const v = clean(value);
+        if (!v) return '';
+        const src = v.includes('/') ? v : `photos/${folder}/${v}`;
+        return `<figure class="photo"><img src="${esc(src)}" alt="${esc(caption)}" loading="lazy" onerror="this.closest('figure').remove()"><figcaption>${esc(caption)} · <span class="mono">${esc(v)}</span></figcaption></figure>`;
+    }
+    const statusHtml = s => `<span class="status status-${esc(clean(s).toLowerCase())}">${esc(clean(s) || '—')}</span>`;
+    const notFound = (kind, id, back) => `<p class="note">There is no ${kind} <span class="mono">${esc(id)}</span>. ${a(back[0], back[1])}.</p>`;
+    function pager(list, key, index, prefix, back) {
+        const prev = list[index - 1], next = list[index + 1];
+        return `<nav class="pager" aria-label="Records"><span>${prev ? a(prefix + prev[key], '← ' + esc(prev[key])) : ''}</span>${a(back[0], back[1])}<span>${next ? a(prefix + next[key], esc(next[key]) + ' →') : ''}</span></nav>`;
+    }
+    const claimList = claims => claims.length
+        ? `<ul class="plain">${claims.map(c => `<li>${a('claim/' + c.claim_id, esc(clean(c.statement)))} <span class="note">· ${statusHtml(c.status)} · <span class="mono">${esc(c.claim_id)}</span></span></li>`).join('')}</ul>`
+        : '';
+
+    // ---------- Pages ----------
+    function pageIntro() {
+        const held = D.units.filter(u => clean(u.custody) === 'in_hand').length;
+        const openGaps = D.gaps.filter(g => clean(g.status) !== 'closed').length;
+        const year0 = byId(D.claims, 'claim_id', 'RPM-CLAIM-001');
+        return `<div class="measure">
+            <h1 class="page">About this archive</h1>
+            <p class="lead">This site documents the Nike SB bags line, the RPM backpack and the models released alongside it, from 2007 to the present. It is built from primary evidence: each bag is recorded as a physical unit, from a photograph of its interior label, and every dating or periodisation argument is kept apart as a claim that cites the units it rests on.</p>
+            <p class="links">${a('catalog', 'Browse the catalog')} · ${a('essays/essay-01', 'Read the Year Zero essay')}</p>
+
+            <h2>Current position: Year Zero</h2>
+            <p>This archive takes <strong>BA2037</strong> as the first publicly sold Nike SB RPM chassis. While incubation prototypes existed in 2006, BA2037 established the "fixed feature map"—board straps, laptop sleeve, MOLLE webbing—that defined the line for the next two decades.</p>
+            ${year0 ? `<p class="note">Recorded as claim ${a('claim/RPM-CLAIM-001', 'RPM-CLAIM-001', 'mono')}, status: ${statusHtml(year0.status)}. It becomes citable once BA2037 units are logged.</p>` : ''}
+
+            <h2>How the record works</h2>
+            <p><strong>Units</strong> are physical bags, one row each, transcribed from the interior label (style code, production date, factory) and recorded for construction. <strong>Claims</strong> are arguments about dating, sequence and attribution; each cites the units it rests on, and a claim with nothing to cite is marked speculative. <strong>Gaps</strong> record what cannot yet be documented, where it has been looked for, and what would close it.</p>
+            <p>Read in <em>General</em> mode for the bags. Switch to <em>Scholarly</em> for each unit's witness record, the claims and gaps, and the fields not yet read from evidence, which are marked ${flagHtml('confirm')}.</p>
+
+            <h2>Current state</h2>
+            <p>${D.units.length} ${D.units.length === 1 ? 'unit' : 'units'} logged (${held} in hand), ${D.codes.length} style ${D.codes.length === 1 ? 'code' : 'codes'} in the register, ${D.claims.filter(isLive).length} live claims, ${openGaps} open ${openGaps === 1 ? 'gap' : 'gaps'}. ${D.legacy.length} style codes carried over from the earlier catalog are awaiting a witness; Scholarly mode lists them.</p>
+
+            <h2>The data</h2>
+            <p>The corpus is six CSV files in the project's public repository, in <a href="${REPO_URL}/tree/main/corpus"><span class="mono">corpus/</span></a>. This site reads them directly; corrections are made there.</p>
+        </div>`;
+    }
+
+    function pageCatalog() {
+        const searchBox = `<div class="search"><label for="q" class="label">Search</label><input id="q" type="search" value="${esc(query)}" placeholder="Code, name, colourway or note"></div>`;
+        const legacyIntro = `<p class="note">Style codes carried over from the catalog published before 1 October 2026. None is yet backed by a logged unit or a dated source; each leaves this list when its first unit is logged.</p>`;
+        const emptyUnits = 'No unit has been logged yet. Each bag enters the archive from a photograph of its interior label, one per session.';
+        const legacyHref = r => H('legacy/' + r.sku);
+        if (!scholarly()) {
+            // General mode shows only what a claim stands behind. The pre-corpus register has no
+            // claims (and includes codes whose model line is unresolved), so it is Scholarly only.
+            const units = D.units.filter(inGeneral);
+            const pointer = D.legacy.length
+                ? `<p class="note">${D.legacy.length} style codes from the catalog published before 1 October 2026 are awaiting a witness. They are listed, with what each still needs, in <button type="button" class="linkish" data-mode="scholarly">Scholarly mode</button>.</p>`
+                : '';
+            return `<h1 class="page">Catalog</h1>${units.length ? searchBox : ''}
+                <h2>Units</h2>
+                ${register('g-units', [
+                    { key: 'code', label: 'Code', cls: 'nowrap', get: unitCode, html: u => `<span class="mono">${esc(unitCode(u))}</span>` },
+                    { key: 'title', label: 'Colourway', get: unitTitle },
+                    { key: 'model', label: 'Model', cls: 'wide', get: u => u.model_name },
+                ], units, { href: u => H('unit/' + u.unit_id), empty: D.units.length ? 'No unit is described in general mode yet: a unit appears here once a claim cites it. Switch to Scholarly to see every logged unit.' : emptyUnits })}
+                ${pointer}`;
+        }
+        return `<h1 class="page">Catalog</h1>${searchBox}
+            <h2>Units</h2>
+            ${register('s-units', [
+                { key: 'unit_id', label: 'Unit', cls: 'nowrap', get: u => u.unit_id, html: u => unitLink(u.unit_id) },
+                { key: 'code', label: 'Code', cls: 'nowrap', get: unitCode, html: u => `<span class="mono">${fmt(unitCode(u))}</span>` },
+                { key: 'model', label: 'Model', cls: 'wide', get: u => u.model_name },
+                { key: 'prod', label: 'Produced', cls: 'nowrap', get: u => u.production_date },
+                { key: 'factory', label: 'Factory', cls: 'wide', get: u => u.factory_code },
+                { key: 'custody', label: 'Custody', cls: 'wide', get: u => u.custody },
+            ], D.units, { href: u => H('unit/' + u.unit_id), empty: emptyUnits })}
+            <h2>Code register</h2>
+            ${register('s-codes', [
+                { key: 'code', label: 'Code', cls: 'nowrap', get: c => c.style_code, html: c => codeLink(c.style_code) },
+                { key: 'model', label: 'Model', get: c => c.model_name },
+                { key: 'status', label: 'Status', get: c => c.status },
+                { key: 'count', label: 'Units', cls: 'wide', get: c => c.unit_count },
+            ], D.codes, { href: c => H('code/' + baseOf(c.style_code)), empty: 'Empty. A style code enters the register only when a logged unit carries a label photograph, or a dated source reports it.' })}
+            <h2>Pre-corpus register</h2>${legacyIntro}
+            ${register('s-legacy', [
+                { key: 'sku', label: 'Code', cls: 'nowrap', get: r => r.sku, html: r => a('legacy/' + r.sku, esc(r.sku), 'mono') },
+                { key: 'name', label: 'Name', get: r => r.name },
+                { key: 'status', label: 'Legacy status', cls: 'wide', get: r => r.status },
+                { key: 'note', label: 'Corpus note', cls: 'wide', get: r => r.corpus_note, html: r => linkIds(val(r.corpus_note)) },
+            ], D.legacy, { href: legacyHref })}`;
+    }
+
+    const UNIT_GROUPS = [
+        ['Identification', [['model_name', 'Model'], ['colorway_name', 'Colourway name']]],
+        ['Label', [['style_code', 'Style code'], ['color_suffix', 'Colour suffix'], ['production_date', 'Production date'], ['factory_code', 'Factory'], ['region_labels', 'Region and care labels'], ['label_form_notes', 'Label form'], ['label_photo', 'Label photograph']]],
+        ['Hangtag and sticker', [['hangtag', 'Hangtag'], ['hangtag_photo', 'Hangtag photograph'], ['qr_sticker', 'QR sticker']]],
+        ['Construction', [['body_material', 'Body material'], ['print_motif', 'Print motif'], ['modular_attachment', 'Modular attachment'], ['molle', 'MOLLE'], ['padding', 'Padding'], ['hardware', 'Hardware']]],
+        ['Custody and provenance', [['custody', 'Custody'], ['condition', 'Condition'], ['observed_date', 'Observed'], ['first_documented', 'First documented'], ['source_ref', 'Source']]],
+        ['Notes', [['notes', 'Notes']]],
+    ];
+
+    function pageUnit(id) {
+        const index = D.units.findIndex(u => u.unit_id === id);
+        const u = D.units[index];
+        if (!u) return notFound('unit', id, ['catalog', 'Back to the catalog']);
+        const code = unitCode(u);
+        const claims = claimsCiting(id);
+        const live = claims.filter(isLive);
+        const head = `<p class="label">Unit <span class="mono">${esc(id)}</span> · ${codeLink(code)}</p><h1 class="page">${esc(unitTitle(u))}</h1>`;
+        let body;
+        if (!scholarly()) {
+            const period = live.filter(c => /period/i.test(c.claim_type));
+            body = live.length
+                ? `${photo(u.label_photo, 'labels', 'Interior label')}
+                   ${dl([['Model', esc(clean(u.model_name)) || DASH], ['Style code', `<span class="mono">${esc(code)}</span>`], ['Colourway', esc(clean(u.colorway_name)) || DASH]].concat(period.length ? [['Period', period.map(c => esc(clean(c.statement))).join('<br>')]] : []))}
+                   <h2>What the archive says about it</h2>${claimList(live)}`
+                : `<p class="banner">No claim cites this unit yet, so it has no general-mode description. <button type="button" class="linkish" data-mode="scholarly">Switch to Scholarly</button> for its witness record.</p>`;
+        } else {
+            body = `${photo(u.label_photo, 'labels', 'Interior label')}${photo(u.hangtag_photo, 'hangtags', 'Hangtag')}
+                ${UNIT_GROUPS.map(([title, fields]) => `<h3>${esc(title)}</h3>${dl(fields.map(([k, label]) => [label, k === 'source_ref' ? (clean(u[k]) ? linkIds(fmt(u[k])) : DASH) : val(u[k])]))}`).join('')}
+                <h2>Claims citing this unit</h2>${claimList(claims) || '<p class="note">None yet.</p>'}`;
+        }
+        return `<article class="measure">${head}${body}${cite(`unit ${id} (${code})`, 'unit/' + id)}${pager(D.units, 'unit_id', index, 'unit/', ['catalog', 'All records'])}</article>`;
+    }
+
+    function pageCode(base) {
+        const row = D.codes.find(c => baseOf(c.style_code) === base);
+        const units = unitsForBase(base);
+        const legacy = legacyForBase(base);
+        if (!row && !units.length && !legacy.length) return notFound('style code', base, ['catalog', 'Back to the catalog']);
+        const shownUnits = scholarly() ? units : units.filter(inGeneral);
+        let codeBlock = '';
+        if (scholarly()) {
+            codeBlock = row
+                ? `<h2>Code register</h2>${dl([
+                    ['Model', val(row.model_name)], ['Status', statusHtml(row.status)],
+                    ['Release date', val(row.release_date)], ['Release source', clean(row.release_source_id) ? refLink(clean(row.release_source_id)) : DASH],
+                    ['First documented', val(row.first_documented)], ['First documented in', clean(row.first_documented_source_id) ? refLink(clean(row.first_documented_source_id)) : DASH],
+                    ['Suffixes observed', val(row.color_suffixes_observed)], ['Production dates observed', val(row.production_dates_observed)],
+                    ['Factories observed', val(row.factories_observed)], ['Units', val(row.unit_count)],
+                    ['Witnesses', idList(row.witness_unit_ids).map(refLink).join(', ') || DASH],
+                    ['Period assignment', val(row.period_assignment)], ['Notes', linkIds(val(row.notes))],
+                ])}`
+                : `<p class="banner">Not in the code register: no logged unit with a label photograph and no dated source report it yet.</p>`;
+        }
+        return `<article class="measure"><p class="label">Style code</p><h1 class="page mono">${esc(base)}</h1>
+            ${codeBlock}
+            <h2>Units</h2>${register('code-units', [
+                { key: 'unit_id', label: 'Unit', cls: 'nowrap', get: u => u.unit_id, html: u => unitLink(u.unit_id) },
+                { key: 'code', label: 'Code', cls: 'nowrap', get: unitCode, html: u => `<span class="mono">${fmt(unitCode(u))}</span>` },
+                { key: 'prod', label: 'Produced', get: u => u.production_date },
+                { key: 'custody', label: 'Custody', cls: 'wide', get: u => u.custody },
+            ], shownUnits, { href: u => H('unit/' + u.unit_id), empty: 'None logged' + (units.length && !scholarly() ? ' with a claim behind them; switch to Scholarly to see all.' : '.') })}
+            ${legacy.length && scholarly() ? `<h2>In the pre-corpus register</h2>${register('code-legacy', [
+                { key: 'sku', label: 'Code', cls: 'nowrap', get: r => r.sku, html: r => a('legacy/' + r.sku, esc(r.sku), 'mono') },
+                { key: 'name', label: 'Name', get: r => r.name },
+                { key: 'colorway', label: 'Colourway', cls: 'wide', get: r => r.colorway },
+            ], legacy, { href: r => H('legacy/' + r.sku) })}` : ''}
+        </article>`;
+    }
+
+    function pageLegacy(sku) {
+        const index = D.legacy.findIndex(r => r.sku === sku);
+        const r = D.legacy[index];
+        if (!r) return notFound('register entry', sku, ['catalog', 'Back to the catalog']);
+        const units = D.units.filter(u => unitCode(u) === sku);
+        const pairs = [['Style code', codeLink(r.sku)], ['Name', val(r.name)], ['Colourway', val(r.colorway)]];
+        if (scholarly()) pairs.push(['Legacy era', val(r.era)], ['Legacy status', val(r.status)], ['Legacy note', val(r.notes)], ['Corpus note', linkIds(val(r.corpus_note))]);
+        return `<article class="measure"><p class="label">Pre-corpus register · <span class="mono">${esc(r.sku)}</span></p>
+            <h1 class="page">${esc(clean(r.name) || r.sku)}</h1>
+            <p class="banner">Carried over from the catalog published before 1 October 2026. This is not a corpus record: no logged unit or dated source backs it yet.${scholarly() ? ' Legacy fields are shown as published and are unsourced.' : ''}</p>
+            ${dl(pairs)}
+            ${units.length ? `<h2>Logged units with this code</h2><p>${units.map(u => unitLink(u.unit_id)).join(', ')}</p>` : ''}
+            ${pager(D.legacy, 'sku', index, 'legacy/', ['catalog', 'All records'])}
+        </article>`;
+    }
+
+    function pageClaims() {
+        return `<h1 class="page">Claims</h1>
+            <p class="note measure">Arguments about dating, sequence and attribution. Each cites the units it rests on; a claim with no units to cite is speculative. Retracted claims stay listed so that anything citing them can be traced.</p>
+            ${register('claims', [
+                { key: 'id', label: 'Claim', cls: 'nowrap', get: c => c.claim_id, html: c => a('claim/' + c.claim_id, esc(c.claim_id), 'mono') },
+                { key: 'statement', label: 'Statement', get: c => c.statement },
+                { key: 'status', label: 'Status', get: c => c.status, html: c => statusHtml(c.status) },
+                { key: 'units', label: 'Units cited', cls: 'wide', get: c => c.evidence_unit_ids, html: c => idList(c.evidence_unit_ids).map(refLink).join(', ') || DASH },
+            ], D.claims, { href: c => H('claim/' + c.claim_id), empty: 'No claims yet.' })}`;
+    }
+
+    function pageClaim(id) {
+        const index = D.claims.findIndex(c => c.claim_id === id);
+        const c = D.claims[index];
+        if (!c) return notFound('claim', id, ['claims', 'All claims']);
+        const units = idList(c.evidence_unit_ids), sources = idList(c.evidence_source_ids);
+        return `<article class="measure"><p class="label">Claim <span class="mono">${esc(id)}</span> · ${esc(clean(c.claim_type))}</p>
+            <h1 class="page${/retracted/i.test(c.status) ? ' muted' : ''}">${esc(clean(c.statement))}</h1>
+            ${dl([
+                ['Status', statusHtml(c.status)],
+                ['Units cited', units.map(refLink).join(', ') || '<span class="muted">None — speculative until units are logged</span>'],
+                ['Sources cited', sources.map(refLink).join(', ') || DASH],
+                ['Construction criterion', val(c.construction_criterion)],
+                ['Confidence', val(c.confidence)], ['Raised', val(c.raised_date)],
+                ['Superseded by', clean(c.superseded_by) ? refLink(clean(c.superseded_by)) : DASH],
+                ['Notes', linkIds(val(c.notes))],
+            ])}
+            ${cite(`claim ${id}`, 'claim/' + id)}
+            ${pager(D.claims, 'claim_id', index, 'claim/', ['claims', 'All claims'])}
+        </article>`;
+    }
+
+    function pageGaps() {
+        return `<h1 class="page">Gaps</h1>
+            <p class="note measure">What cannot yet be documented, where it has been looked for, and what would close it. A gap is retired only by citing the unit or source that closed it.</p>
+            ${register('gaps', [
+                { key: 'id', label: 'Gap', cls: 'nowrap', get: g => g.gap_id, html: g => a('gap/' + g.gap_id, esc(g.gap_id), 'mono') },
+                { key: 'span', label: 'Span', cls: 'nowrap', get: g => g.span },
+                { key: 'desc', label: 'What is missing', get: g => g.description },
+                { key: 'status', label: 'Status', cls: 'wide', get: g => g.status, html: g => statusHtml(g.status) },
+            ], D.gaps, { href: g => H('gap/' + g.gap_id), empty: 'No gaps recorded.' })}`;
+    }
+
+    function pageGap(id) {
+        const index = D.gaps.findIndex(g => g.gap_id === id);
+        const g = D.gaps[index];
+        if (!g) return notFound('gap', id, ['gaps', 'All gaps']);
+        return `<article class="measure"><p class="label">Gap <span class="mono">${esc(id)}</span> · ${esc(clean(g.gap_type))}</p>
+            <h1 class="page">${esc(clean(g.span))}</h1>
+            ${dl([
+                ['What is missing', val(g.description)], ['What would close it', val(g.what_would_close_it)],
+                ['Searched', val(g.searched_where)], ['Last searched', val(g.last_searched)],
+                ['Status', statusHtml(g.status)], ['Closed by', clean(g.closed_by) ? refLink(clean(g.closed_by)) : DASH],
+            ])}
+            ${cite(`gap ${id}`, 'gap/' + id)}
+            ${pager(D.gaps, 'gap_id', index, 'gap/', ['gaps', 'All gaps'])}
+        </article>`;
+    }
+
+    function pageSources() {
+        return `<h1 class="page">Sources</h1>
+            <p class="note measure">Dated documentary evidence: shop pages, period media, catalogues, listings with label photographs.</p>
+            ${register('sources', [
+                { key: 'id', label: 'Source', cls: 'nowrap', get: s => s.source_id, html: s => a('source/' + s.source_id, esc(s.source_id), 'mono') },
+                { key: 'publisher', label: 'Publisher', get: s => s.publisher },
+                { key: 'date', label: 'Published', cls: 'nowrap', get: s => s.publication_date },
+                { key: 'type', label: 'Type', cls: 'wide', get: s => s.source_type },
+            ], D.sources, { href: s => H('source/' + s.source_id), empty: 'No sources entered yet.' })}`;
+    }
+
+    function pageSource(id) {
+        const index = D.sources.findIndex(s => s.source_id === id);
+        const s = D.sources[index];
+        if (!s) return notFound('source', id, ['sources', 'All sources']);
+        const url = v => { const c = clean(v); return /^https?:\/\//.test(c) ? `<a href="${esc(c)}" rel="noopener">${esc(c)}</a>` : val(v); };
+        return `<article class="measure"><p class="label">Source <span class="mono">${esc(id)}</span> · ${esc(clean(s.source_type))}</p>
+            <h1 class="page">${esc(clean(s.publisher) || id)}</h1>
+            ${dl([
+                ['URL', url(s.url)], ['Archived copy', url(s.archived_url)],
+                ['Published', val(s.publication_date)], ['Accessed', val(s.accessed_date)],
+                ['Attests', val(s.attests)], ['Style codes named', val(s.style_codes_named)],
+                ['Models named', val(s.model_names_named)], ['Earliest known for', val(s.earliest_known_for)],
+                ['Notes', linkIds(val(s.notes))],
+            ])}
+            ${cite(`source ${id}`, 'source/' + id)}
+            ${pager(D.sources, 'source_id', index, 'source/', ['sources', 'All sources'])}
+        </article>`;
+    }
+
+    // ---------- Essays (authored prose, kept verbatim) ----------
+    const ESSAYS = [
+        {
+            id: 'essay-01',
+            title: 'Nike SB RPM Year Zero',
+            subtitle: 'The Foundational Chassis (BA2037)',
+            date: 'Jan 2026',
+            author: 'T. Segal',
+            claims: ['RPM-CLAIM-001', 'RPM-CLAIM-002', 'RPM-CLAIM-003', 'RPM-CLAIM-004'],
+            html: `<div class="essay-body">
+                <p class="lead">The Nike SB RPM Year Zero model, formally cataloged as <strong>BA2037-089/222</strong>, represents the pivotal moment when the RPM backpack transitioned from a conceptual idea to a tangible, repeatable product accessible to skateboarders everywhere.</p>
+                <h4>I. Introduction: The Significance of BA2037</h4>
+                <p>In the simplest terms, BA2037 is recognized as the first Nike SB RPM chassis to be made available for public sale—unless credible evidence emerges identifying an earlier, widely retailed RPM release. Framing BA2037 as "Year Zero" provides both honesty and clarity to the story, offering researchers and collectors a definitive reference point from which all subsequent developments can be measured.</p>
+                <h4>II. Pre-History: Incubation and Early Previews</h4>
+                <p>Before the release of BA2037, there was an important period of incubation. In 2006, media previews surfaced showing elephant or cement-print SB backpacks and similar layouts designed for skate functionality. These early sightings should be seen as experimental hints—important precursors but not yet representing the finalized, retail-proven RPM system.</p>
+                <h4>III. The Gold Box Era and Public Launch</h4>
+                <p>By late 2007 and early 2008, coinciding with Nike SB’s "Gold Box" era, the production-ready RPM arrived in the form of BA2037-089 (black) and BA2037-222 (tan/olive). These two models launched simultaneously, signaling the introduction of a stable and repeatable platform rather than a one-off novelty. Early shop coverage from 2008 confirms that these backpacks were widely available, which validates BA2037’s claim as the first publicly sold RPM.</p>
+                <h4>IV. The BA2037 Chassis: Defining Features</h4>
+                <p>What sets BA2037 apart as a true chassis, rather than just a style, is its consistent feature set. The backpack includes board-carry straps, a padded laptop sleeve, a practical pocket configuration, a durable woven body, and MOLLE webbing for attachments—all specifically designed for the demands of daily skateboarding. The iconic elephant print is utilized with restraint, appearing only on the bottom panel and as two narrow reinforcement strips on the lower front straps.</p>
+                <blockquote>"BA2037 is the first publicly sold Nike SB RPM chassis—until credible evidence shows an earlier, publicly retailed RPM."</blockquote>
+                <h4>V. From Year Zero: Evolution and Experimentation</h4>
+                <p>BA2037’s foundational role is evident in the subsequent evolution of the RPM line. The next iteration, BA2318-089, experimented with synthetic-leather elephant panels, exploring both finish and premium feel. Following that, BA2449-089 expanded the print coverage and enhanced hardware, reflecting growing confidence in the platform.</p>
+                <h4>VI. Cultural Impact</h4>
+                <p>By 2007–2008, Nike SB accessories were not merely afterthoughts; they were central components of skateboarding identity. BA2037 exemplifies how a sneaker icon can be faithfully transformed into a rugged, functional tool, preserving both the spirit of the original and the demands of skateboarding.</p>
+            </div>`,
+        },
+        {
+            // Withdrawn 2026-10-01. It described Dublin Core on every record, which the archive no
+            // longer does (Dublin Core applies at publication), quoted an unattributed line, and made
+            // an unsourced construction claim, now held as RPM-CLAIM-008. The text is in git history.
+            id: 'essay-02',
+            title: 'Methodology & Standardized Data',
+            date: 'Jan 2026',
+            withdrawn: '1 October 2026',
+            notice: 'It described a design in which every record carries the fifteen Dublin Core elements; the archive now applies Dublin Core at publication, not to its evidence records. Its one substantive assertion, a shift in body material from polyester duck canvas to recycled synthetics, is kept as claim RPM-CLAIM-008, speculative until units are cited.',
+        },
+    ];
+
+    function pageEssays(id) {
+        const live = ESSAYS.filter(e => !e.withdrawn);
+        const essay = ESSAYS.find(e => e.id === id) || live[0];
+        const index = `<aside class="index"><p class="label">Essays</p><ol>${live.map(e => `<li><a href="${H('essays/' + e.id)}"${e.id === essay.id ? ' aria-current="true"' : ''}>${esc(e.title)}</a></li>`).join('')}</ol></aside>`;
+        if (essay.withdrawn) {
+            return `<div class="essays">${index}<article class="measure">
+                <p class="label">Essay ${esc(essay.id.replace('essay-', ''))} · withdrawn</p>
+                <h1 class="page muted">${esc(essay.title)}</h1>
+                <p class="banner">Withdrawn ${esc(essay.withdrawn)}. ${linkIds(esc(essay.notice))}</p>
+            </article></div>`;
+        }
+        const claims = essay.claims.map(cid => byId(D.claims, 'claim_id', cid)).filter(Boolean);
+        return `<div class="essays">
+            ${index}
+            <article class="measure">
+                <p class="label">Essay ${esc(essay.id.replace('essay-', ''))} · ${esc(essay.date)}</p>
+                <h1 class="page">${esc(essay.title)}</h1>
+                <p class="subtitle">${esc(essay.subtitle)}</p>
+                ${essay.html}
+                ${claims.length ? `<h3>Claims this essay makes</h3>${claimList(claims)}` : ''}
+                <p class="byline">${esc(essay.author)}, ${esc(essay.date)}</p>
+            </article>
+        </div>`;
+    }
+
+    // ---------- Shell ----------
+    const NAV_GENERAL = [['', 'Introduction', 'intro'], ['catalog', 'Catalog', 'catalog'], ['essays', 'Essays', 'essays']];
+    const NAV_SCHOLARLY = [['', 'Introduction', 'intro'], ['catalog', 'Catalog', 'catalog'], ['claims', 'Claims', 'claims'], ['gaps', 'Gaps', 'gaps'], ['sources', 'Sources', 'sources'], ['essays', 'Essays', 'essays']];
+    const SECTION = { unit: 'catalog', code: 'catalog', legacy: 'catalog', claim: 'claims', gap: 'gaps', source: 'sources' };
+
+    function resolveOldRecord(sku) {
+        // #/record/<sku> addresses were published before units existed. Send them to the
+        // unit (one match), the code page (several), or the pre-corpus entry.
+        const units = D.units.filter(u => unitCode(u) === sku);
+        if (units.length === 1) return 'unit/' + units[0].unit_id;
+        if (units.length > 1) return 'code/' + baseOf(sku);
+        return 'legacy/' + sku;
+    }
+
+    function render() {
+        let route = parseHash();
+        if (route.view === 'record' && loaded) { location.replace(H(resolveOldRecord(route.id))); return; }
+
+        document.querySelectorAll('.mode button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.mode === mode)));
+        const section = SECTION[route.view] || route.view;
+        document.getElementById('nav').innerHTML = (scholarly() ? NAV_SCHOLARLY : NAV_GENERAL)
+            .map(([path, label, view]) => `<a href="#/${path}"${section === view ? ' aria-current="page"' : ''}>${label}</a>`).join('');
+
+        const main = document.getElementById('main');
+        if (!loaded) { main.innerHTML = '<p class="note">Loading the corpus…</p>'; return; }
+        const pages = {
+            intro: pageIntro, catalog: pageCatalog, unit: () => pageUnit(route.id), code: () => pageCode(route.id),
+            legacy: () => pageLegacy(route.id), claims: pageClaims, claim: () => pageClaim(route.id),
+            gaps: pageGaps, gap: () => pageGap(route.id), sources: pageSources, source: () => pageSource(route.id),
+            essays: () => pageEssays(route.id),
         };
+        const errors = loadErrors.length ? `<p class="banner">Some corpus files could not be loaded: ${loadErrors.map(esc).join('; ')}.</p>` : '';
+        main.innerHTML = errors + (pages[route.view] || pageIntro)();
+        applyFilter();
 
-        const NAV = [['', 'Introduction', 'intro'], ['catalog', 'Catalog', 'catalog'], ['essays', 'Essays', 'essays']];
+        const titles = { catalog: 'Catalog', claims: 'Claims', gaps: 'Gaps', sources: 'Sources' };
+        const essay = route.view === 'essays' ? (ESSAYS.find(e => e.id === route.id) || ESSAYS[0]).title : null;
+        const page = titles[route.view] || essay || route.id || null;
+        document.title = page ? `${page} · ${SITE}` : SITE;
+    }
 
-        const App = () => {
-            const [data, setData] = useState([]);
-            const [loadError, setLoadError] = useState(null);
-            const [route, setRoute] = useState(parseHash);
+    // One set of listeners, delegated, so re-rendering never rebinds.
+    document.addEventListener('click', e => {
+        const modeBtn = e.target.closest('button[data-mode]');
+        if (modeBtn) { setMode(modeBtn.dataset.mode); return; }
+        const sortBtn = e.target.closest('button[data-sort]');
+        if (sortBtn) {
+            const [id, key] = sortBtn.dataset.sort.split('|');
+            const s = sorts[id];
+            sorts[id] = s && s.key === key ? { key, dir: -s.dir } : { key, dir: 1 };
+            render();
+            return;
+        }
+        const row = e.target.closest('tr[data-href]');
+        if (row && !e.target.closest('a')) location.hash = row.dataset.href;
+    });
+    document.addEventListener('input', e => {
+        if (e.target.id === 'q') { query = e.target.value; applyFilter(); }
+    });
+    window.addEventListener('hashchange', () => { render(); window.scrollTo(0, 0); });
 
-            useEffect(() => {
-                fetch(DATA_URL, { cache: 'no-cache' })
-                    .then(res => {
-                        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                        return res.text();
-                    })
-                    .then(text => setData(parseCSV(text).map((row, i) => ({ ...row, id: i, dc_identifier: row.sku }))))
-                    .catch(err => setLoadError(err.message));
-            }, []);
-
-            useEffect(() => {
-                const onHash = () => { setRoute(parseHash()); window.scrollTo(0, 0); };
-                window.addEventListener('hashchange', onHash);
-                return () => window.removeEventListener('hashchange', onHash);
-            }, []);
-
-            useEffect(() => {
-                const site = 'Nike SB RPM Master Archive';
-                const page = route.view === 'catalog' ? 'Catalog'
-                    : route.view === 'record' ? route.sku
-                    : route.view === 'essays' ? (ESSAYS.find(e => e.id === route.id) || ESSAYS[0]).title
-                    : null;
-                document.title = page ? `${page} · ${site}` : site;
-            }, [route]);
-
-            const section = route.view === 'record' ? 'catalog' : route.view;
-
-            return (
-                <>
-                    <header className="site">
-                        <div className="wrap">
-                            <p className="site-title"><a href={href('')}>Nike SB RPM Master Archive</a></p>
-                            <p className="site-sub">Catalog and essays on the Nike SB RPM backpack, 2007 to the present</p>
-                            <nav className="primary" aria-label="Site">
-                                {NAV.map(([path, label, view]) => (
-                                    <a key={view} href={href(path)} aria-current={section === view ? 'page' : undefined}>{label}</a>
-                                ))}
-                            </nav>
-                        </div>
-                    </header>
-
-                    <main className="wrap">
-                        {route.view === 'intro' && <Intro data={data} />}
-                        {route.view === 'catalog' && <Catalog data={data} loadError={loadError} />}
-                        {route.view === 'record' && <Record data={data} loadError={loadError} sku={route.sku} />}
-                        {route.view === 'essays' && <Essays id={route.id} />}
-                    </main>
-
-                    <footer className="site">
-                        <div className="wrap">
-                            <p>Nike SB RPM Master Archive, 2026. Data and source code: <a href={REPO_URL}>github.com/tamirsegal1810-byte/rpm-archive</a>.</p>
-                            <p>An independent collector's archive, not affiliated with Nike, Inc.</p>
-                        </div>
-                    </footer>
-                </>
-            );
-        };
-
-        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    render();
+    Promise.all(Object.entries(FILES).map(([key, path]) =>
+        fetch(path, { cache: 'no-cache' })
+            .then(res => { if (!res.ok) throw new Error(`${path}: HTTP ${res.status}`); return res.text(); })
+            .then(text => { const { header, body } = parseCSV(text); HEADERS[key] = header; D[key] = body; })
+            .catch(err => loadErrors.push(err.message))
+    )).then(() => { loaded = true; render(); });
     </script>
 </body>
 </html>
