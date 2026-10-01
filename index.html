@@ -1,50 +1,135 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta name="description" content="The definitive digital archive for the Nike SB RPM Backpack (2007-Present). Documenting every colorway, generation, and limited release SKU.">
-<meta name="keywords" content="Nike SB, RPM Backpack, Nike Backpack, Skateboarding, Archive, BA5403, BA2037, Nike Collector">
-<meta property="og:title" content="Nike SB RPM Master Archive">
-<meta property="og:description" content="A community-driven museum for the Nike SB RPM Backpack.">
-<meta property="og:type" content="website">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nike SB RPM Master Archive | Digital Museum</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Nike SB RPM Master Archive</title>
+    <meta name="description" content="A catalog of the Nike SB RPM backpack by style code, 2007 to the present, with essays on its history. Each record follows the Dublin Core metadata elements.">
+    <meta name="keywords" content="Nike SB, RPM Backpack, Nike Backpack, Skateboarding, Archive, BA5403, BA2037, Nike Collector">
+    <meta property="og:title" content="Nike SB RPM Master Archive">
+    <meta property="og:description" content="Catalog and essays on the Nike SB RPM backpack, 2007 to the present.">
+    <meta property="og:type" content="website">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600&family=Source+Sans+3:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
-        body { font-family: 'Inter', sans-serif; }
-        .mono { font-family: 'JetBrains Mono', monospace; }
-        .skew-title { transform: skewX(-12deg); }
-        .archive-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; }
-        .dc-label { color: #f97316; font-weight: 800; font-size: 0.65rem; letter-spacing: 0.05em; }
-        .prose-text { line-height: 1.8; letter-spacing: -0.01em; }
+        :root {
+            --paper: #faf8f4;
+            --paper-2: #f2eee6;
+            --ink: #1d1c1a;
+            --ink-2: #5d5a54;
+            --ink-3: #8c8882;
+            --rule: #d8d3c8;
+            --rule-2: #e9e5dc;
+            --accent: #8b3a3a;
+            --accent-2: #632626;
+            --serif: "Source Serif 4", "Iowan Old Style", Palatino, Georgia, serif;
+            --sans: "Source Sans 3", "Helvetica Neue", Arial, sans-serif;
+            --mono: "Source Code Pro", Menlo, Consolas, monospace;
+        }
+        * { box-sizing: border-box; }
+        html { -webkit-text-size-adjust: 100%; }
+        body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--serif); font-size: 1.125rem; line-height: 1.55; }
+        .wrap { max-width: 68rem; margin: 0 auto; padding: 0 1.25rem; }
+        .measure { max-width: 40rem; }
+        a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 0.16em; }
+        a:hover { color: var(--accent-2); }
+        :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+        p { margin: 0 0 1.1rem; }
+        .mono { font-family: var(--mono); font-size: 0.88em; }
+        .label { font-family: var(--sans); font-size: 0.76rem; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase; color: var(--ink-2); margin: 0 0 0.5rem; }
+        .note, .links { font-family: var(--sans); font-size: 0.95rem; color: var(--ink-2); }
+        .lead { font-size: 1.2rem; line-height: 1.5; }
+        h1.page { font-size: 2rem; font-weight: 600; line-height: 1.15; letter-spacing: -0.01em; margin: 0 0 1.25rem; }
+        h2 { font-size: 1.3rem; font-weight: 600; line-height: 1.25; margin: 2.25rem 0 0.75rem; }
+
+        /* Header and navigation */
+        header.site { border-bottom: 1px solid var(--rule); padding-top: 1.5rem; }
+        .site-title { font-size: 1.45rem; font-weight: 600; letter-spacing: -0.01em; margin: 0; }
+        .site-title a { color: inherit; text-decoration: none; }
+        .site-sub { font-family: var(--sans); font-size: 0.95rem; color: var(--ink-2); margin: 0.2rem 0 0; }
+        nav.primary { display: flex; flex-wrap: wrap; gap: 0 1.75rem; margin-top: 1rem; font-family: var(--sans); font-size: 0.95rem; }
+        nav.primary a { color: var(--ink-2); text-decoration: none; padding: 0.5rem 0 0.7rem; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+        nav.primary a:hover { color: var(--ink); }
+        nav.primary a[aria-current="page"] { color: var(--accent); border-bottom-color: var(--accent); }
+        main.wrap { padding-top: 2.5rem; padding-bottom: 4rem; }
+
+        /* Catalog register */
+        .search { margin: 1.25rem 0 1.5rem; }
+        .search input { display: block; width: 100%; max-width: 26rem; font-family: var(--sans); font-size: 1rem; color: var(--ink); background: #fff; border: 1px solid var(--rule); border-radius: 2px; padding: 0.5rem 0.7rem; }
+        .table-wrap { overflow-x: auto; }
+        table.register { width: 100%; border-collapse: collapse; font-size: 0.97rem; font-variant-numeric: tabular-nums; }
+        .register th { text-align: left; font-family: var(--sans); font-size: 0.76rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-2); border-bottom: 1px solid var(--ink); padding: 0 1rem 0.5rem 0; white-space: nowrap; }
+        .register th button { font: inherit; color: inherit; letter-spacing: inherit; text-transform: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+        .register th button:hover, .register th[aria-sort="ascending"] button, .register th[aria-sort="descending"] button { color: var(--accent); }
+        .register td { padding: 0.55rem 1rem 0.55rem 0; border-bottom: 1px solid var(--rule-2); vertical-align: top; }
+        .register tbody tr { cursor: pointer; }
+        .register tbody tr:hover { background: var(--paper-2); }
+        .register td.col-sku { white-space: nowrap; }
+        .register td.col-sku a { text-decoration: none; }
+        .register td.col-sku a:hover { text-decoration: underline; }
+
+        /* Record page */
+        dl.record { display: grid; grid-template-columns: 11rem 1fr; gap: 0.45rem 1.5rem; margin: 0; }
+        dl.record dt { font-family: var(--sans); font-size: 0.88rem; color: var(--ink-2); padding-top: 0.18rem; }
+        dl.record dd { margin: 0; }
+        .term { color: var(--ink-3); font-size: 0.72rem; margin-left: 0.3rem; }
+        .cite { font-size: 0.97rem; background: var(--paper-2); border-left: 2px solid var(--rule); padding: 0.85rem 1rem; overflow-wrap: anywhere; }
+        nav.pager { display: flex; justify-content: space-between; gap: 1rem; margin-top: 2.5rem; font-family: var(--sans); font-size: 0.95rem; }
+
+        /* Essays */
+        .essays { display: grid; grid-template-columns: 13rem minmax(0, 1fr); gap: 3rem; align-items: start; }
+        aside.index ol { list-style: none; margin: 0; padding: 0; font-family: var(--sans); font-size: 0.95rem; }
+        aside.index li a { display: block; padding: 0.4rem 0; color: var(--ink-2); text-decoration: none; border-bottom: 1px solid var(--rule-2); }
+        aside.index li a:hover { color: var(--ink); }
+        aside.index li a[aria-current="true"] { color: var(--accent); }
+        .subtitle { font-style: italic; color: var(--ink-2); margin: -0.75rem 0 1.5rem; }
+        .essay-body h4 { font-family: var(--sans); font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-2); margin: 2.25rem 0 0.7rem; }
+        .essay-body blockquote { margin: 1.75rem 0; padding: 0.1rem 0 0.1rem 1.2rem; border-left: 2px solid var(--accent); font-style: italic; color: var(--ink-2); }
+        .byline { font-family: var(--sans); font-size: 0.95rem; color: var(--ink-2); border-top: 1px solid var(--rule); padding-top: 1rem; margin-top: 2.5rem; }
+
+        /* Footer */
+        footer.site { border-top: 1px solid var(--rule); padding: 1.5rem 0 2.5rem; font-family: var(--sans); font-size: 0.88rem; color: var(--ink-2); }
+        footer.site p { margin: 0 0 0.35rem; }
+
+        @media (max-width: 760px) { .essays { grid-template-columns: 1fr; gap: 1.5rem; } }
+        @media (max-width: 640px) {
+            body { font-size: 1.0625rem; }
+            h1.page { font-size: 1.7rem; }
+            .register .col-rarity, .register .col-date, .register .col-era { display: none; }
+            .register th:last-child, .register td:last-child { padding-right: 0; }
+            dl.record { grid-template-columns: 1fr; gap: 0.1rem; }
+            dl.record dt { margin-top: 0.8rem; }
+        }
+        @media print {
+            nav.primary, .search, nav.pager, aside.index { display: none; }
+            body { background: #fff; }
+            a { color: inherit; text-decoration: none; }
+        }
     </style>
 </head>
-<body class="bg-zinc-950 text-zinc-100 selection:bg-orange-500">
+<body>
     <div id="root"></div>
 
     <script type="text/babel">
         const { useState, useMemo, useEffect } = React;
 
-        const Icon = ({ name, className = "w-5 h-5" }) => {
-            useEffect(() => {
-                if (window.lucide) window.lucide.createIcons();
-            }, [name]);
-            return <i data-lucide={name} className={className}></i>;
-        };
-
         // The catalog lives in data/master_metadata.csv (one row per SKU). Edit the CSV, not this page.
         const DATA_URL = 'data/master_metadata.csv';
+        const REPO_URL = 'https://github.com/tamirsegal1810-byte/rpm-archive';
+        const CSV_URL = REPO_URL + '/blob/main/data/master_metadata.csv';
 
-        // The 15 Dublin Core elements, in display order. The CSV's `sku` column is DC.identifier.
+        // The 15 Dublin Core elements, in display order. The CSV's `sku` column is dc:identifier.
         const DC_FIELDS = ['title', 'identifier', 'date', 'creator', 'subject', 'description', 'publisher', 'contributor', 'type', 'format', 'source', 'language', 'relation', 'coverage', 'rights'];
+        // The collector's own columns, kept alongside the Dublin Core record.
+        const CATALOG_FIELDS = [['name', 'Name'], ['era', 'Era'], ['status', 'Status'], ['colorway', 'Colorway'], ['rarity', 'Rarity'], ['notes', 'Notes']];
 
         // Bags without a DC title fall back to the CSV's short name.
         const titleOf = (item) => item.dc_title || item.name || item.dc_identifier;
+        const capitalize = (s) => s.charAt(0).toUpperCase() + s.slice(1);
 
         // RFC 4180 CSV: quoted fields may contain commas, line breaks and doubled quotes ("").
         const parseCSV = (text) => {
@@ -72,7 +157,6 @@
             const [header, ...body] = rows.filter(r => r.some(cell => cell.trim() !== ''));
             return body.map(r => Object.fromEntries(header.map((key, j) => [key.trim(), (r[j] || '').trim()])));
         };
-
         const ESSAYS = [
             {
                 id: "essay-01",
@@ -81,28 +165,28 @@
                 date: "Jan 2026",
                 author: "T. Segal",
                 content: (
-                    <div className="space-y-8">
-                        <p className="lead text-xl text-zinc-200">The Nike SB RPM Year Zero model, formally cataloged as <strong>BA2037-089/223</strong>, represents the pivotal moment when the RPM backpack transitioned from a conceptual idea to a tangible, repeatable product accessible to skateboarders everywhere.</p>
+                    <div className="essay-body">
+                        <p className="lead">The Nike SB RPM Year Zero model, formally cataloged as <strong>BA2037-089/223</strong>, represents the pivotal moment when the RPM backpack transitioned from a conceptual idea to a tangible, repeatable product accessible to skateboarders everywhere.</p>
                         
-                        <h4 className="text-xl font-black text-white italic uppercase tracking-tighter">I. Introduction: The Significance of BA2037</h4>
+                        <h4>I. Introduction: The Significance of BA2037</h4>
                         <p>In the simplest terms, BA2037 is recognized as the first Nike SB RPM chassis to be made available for public sale—unless credible evidence emerges identifying an earlier, widely retailed RPM release. Framing BA2037 as "Year Zero" provides both honesty and clarity to the story, offering researchers and collectors a definitive reference point from which all subsequent developments can be measured.</p>
 
-                        <h4 className="text-xl font-black text-white italic uppercase tracking-tighter">II. Pre-History: Incubation and Early Previews</h4>
+                        <h4>II. Pre-History: Incubation and Early Previews</h4>
                         <p>Before the release of BA2037, there was an important period of incubation. In 2006, media previews surfaced showing elephant or cement-print SB backpacks and similar layouts designed for skate functionality. These early sightings should be seen as experimental hints—important precursors but not yet representing the finalized, retail-proven RPM system.</p>
 
-                        <h4 className="text-xl font-black text-white italic uppercase tracking-tighter">III. The Gold Box Era and Public Launch</h4>
+                        <h4>III. The Gold Box Era and Public Launch</h4>
                         <p>By late 2007 and early 2008, coinciding with Nike SB’s "Gold Box" era, the production-ready RPM arrived in the form of BA2037-089 (black) and BA2037-223 (tan/olive). These two models launched simultaneously, signaling the introduction of a stable and repeatable platform rather than a one-off novelty. Early shop coverage from 2008 confirms that these backpacks were widely available, which validates BA2037’s claim as the first publicly sold RPM.</p>
 
-                        <h4 className="text-xl font-black text-white italic uppercase tracking-tighter">IV. The BA2037 Chassis: Defining Features</h4>
+                        <h4>IV. The BA2037 Chassis: Defining Features</h4>
                         <p>What sets BA2037 apart as a true chassis, rather than just a style, is its consistent feature set. The backpack includes board-carry straps, a padded laptop sleeve, a practical pocket configuration, a durable woven body, and MOLLE webbing for attachments—all specifically designed for the demands of daily skateboarding. The iconic elephant print is utilized with restraint, appearing only on the bottom panel and as two narrow reinforcement strips on the lower front straps.</p>
-                        <blockquote className="border-l-4 border-orange-600 pl-8 py-4 italic text-zinc-500 text-2xl font-black leading-tight">
+                        <blockquote>
                             "BA2037 is the first publicly sold Nike SB RPM chassis—until credible evidence shows an earlier, publicly retailed RPM."
                         </blockquote>
 
-                        <h4 className="text-xl font-black text-white italic uppercase tracking-tighter">V. From Year Zero: Evolution and Experimentation</h4>
+                        <h4>V. From Year Zero: Evolution and Experimentation</h4>
                         <p>BA2037’s foundational role is evident in the subsequent evolution of the RPM line. The next iteration, BA2318-089, experimented with synthetic-leather elephant panels, exploring both finish and premium feel. Following that, BA2449-089 expanded the print coverage and enhanced hardware, reflecting growing confidence in the platform.</p>
 
-                        <h4 className="text-xl font-black text-white italic uppercase tracking-tighter">VI. Cultural Impact</h4>
+                        <h4>VI. Cultural Impact</h4>
                         <p>By 2007–2008, Nike SB accessories were not merely afterthoughts; they were central components of skateboarding identity. BA2037 exemplifies how a sneaker icon can be faithfully transformed into a rugged, functional tool, preserving both the spirit of the original and the demands of skateboarding.</p>
                     </div>
                 )
@@ -114,11 +198,11 @@
                 date: "Jan 2026",
                 author: "T. Segal",
                 content: (
-                    <div className="space-y-8">
+                    <div className="essay-body">
                         <p>The digital preservation of tactical streetwear requires a shift from consumerist listing to archival documentation. This project utilizes the <strong>Dublin Core Metadata Element Set (DCMI)</strong> to categorize items based on their historical and physical properties.</p>
-                        <h4 className="text-xl font-black text-white italic uppercase tracking-tighter">I. The 15 Core Elements</h4>
+                        <h4>I. The 15 Core Elements</h4>
                         <p>To ensure longevity, every RPM record contains the fifteen core descriptors. This allows researchers to understand not just the 'What' (SKU: BA5403-010) but the 'Where' (Coverage) and the 'Who' (Contributors).</p>
-                        <blockquote className="border-l-4 border-orange-600 pl-8 py-4 italic text-zinc-500 text-2xl font-black leading-tight">
+                        <blockquote>
                             "Metadata is the last remaining footprint of physical objects in a post-analog age."
                         </blockquote>
                         <p>Our ongoing research focuses on material degradation. The transition from heavy polyester duck canvas to lighter recycled synthetics marks a significant shift in Nike SB's environmental policy.</p>
@@ -127,15 +211,185 @@
             }
         ];
 
+        // Every page has an address: #/ , #/catalog , #/record/BA5403-010 , #/essays/essay-01
+        const href = (path) => '#/' + path;
+        const recordHref = (sku) => href('record/' + encodeURIComponent(sku));
+        const parseHash = () => {
+            const parts = window.location.hash.replace(/^#\/?/, '').split('/').filter(Boolean);
+            if (parts[0] === 'catalog') return { view: 'catalog' };
+            if (parts[0] === 'record' && parts[1]) return { view: 'record', sku: decodeURIComponent(parts[1]) };
+            if (parts[0] === 'essays') return { view: 'essays', id: parts[1] || ESSAYS[0].id };
+            return { view: 'intro' };
+        };
+
+        const Intro = ({ data }) => {
+            const held = data.filter(r => r.status === 'In Collection').length;
+            return (
+                <div className="measure">
+                    <h1 className="page">About this archive</h1>
+                    <p className="lead">This site documents the Nike SB RPM backpack colorway by colorway, from its first public release in 2008 to the present. Each record is identified by its Nike style code and described with the Dublin Core metadata elements, so the catalog can be read, cited and reused outside this site.</p>
+                    <p className="links"><a href={href('catalog')}>Browse the catalog</a> · <a href={href('essays/' + ESSAYS[0].id)}>Read the Year Zero essay</a></p>
+
+                    <h2>Current position: Year Zero</h2>
+                    <p>The archive has formally identified <strong>BA2037 (2008)</strong> as the first publicly sold Nike SB RPM chassis. While incubation prototypes existed in 2006, BA2037 established the "fixed feature map"—board straps, laptop sleeve, MOLLE webbing—that defined the line for the next two decades.</p>
+                    <p className="note"><a href={href('essays/' + ESSAYS[0].id)}>Read the full essay</a></p>
+
+                    <h2>Scope</h2>
+                    <p>This archive serves to standardize the metadata of the RPM series, ensuring that technical design choices from 2012–2026 are preserved in a machine-readable format.</p>
+
+                    <h2>The data</h2>
+                    <p>The catalog is a single file, <a href={CSV_URL}><span className="mono">data/master_metadata.csv</span></a>, kept in the project's public repository. Every record on this site is read from that file, and corrections are made there.{data.length > 0 && <> It currently holds {data.length} records, {held} of them in the collection.</>}</p>
+                </div>
+            );
+        };
+
+        const COLUMNS = [
+            ['sku', 'SKU', 'col-sku'], ['title', 'Title', 'col-title'], ['era', 'Era', 'col-era'],
+            ['dc_date', 'Date', 'col-date'], ['status', 'Status', 'col-status'], ['rarity', 'Rarity', 'col-rarity'],
+        ];
+        const cell = (row, key) => key === 'title' ? titleOf(row) : (row[key] || '');
+
+        const Catalog = ({ data, loadError }) => {
+            const [query, setQuery] = useState('');
+            const [sort, setSort] = useState({ key: null, dir: 1 });
+
+            const rows = useMemo(() => {
+                const q = query.trim().toLowerCase();
+                const found = data.filter(r => !q || [r.sku, titleOf(r), r.name, r.era, r.colorway, r.notes].some(v => (v || '').toLowerCase().includes(q)));
+                if (!sort.key) return found;
+                return [...found].sort((a, b) => {
+                    const av = cell(a, sort.key), bv = cell(b, sort.key);
+                    if (av === '' || bv === '') return av === bv ? 0 : (av === '' ? 1 : -1); // blanks last, whichever direction
+                    return av.localeCompare(bv, undefined, { numeric: true, sensitivity: 'base' }) * sort.dir;
+                });
+            }, [data, query, sort]);
+
+            const toggle = (key) => setSort(s => s.key === key ? { key, dir: -s.dir } : { key, dir: 1 });
+            const open = (sku) => { window.location.hash = recordHref(sku); };
+
+            return (
+                <div>
+                    <h1 className="page">Catalog</h1>
+                    {loadError ? (
+                        <p className="note">The catalog could not be loaded ({loadError}). It is read from <span className="mono">{DATA_URL}</span>.</p>
+                    ) : data.length === 0 ? (
+                        <p className="note">Loading the catalog…</p>
+                    ) : (
+                        <p className="note">{data.length} records{rows.length !== data.length ? `, ${rows.length} shown` : ''}. Sort by clicking a column heading; open a row for the full record.</p>
+                    )}
+                    <div className="search">
+                        <label htmlFor="q" className="label">Search</label>
+                        <input id="q" type="search" value={query} onChange={e => setQuery(e.target.value)} placeholder="SKU, name, era or note" />
+                    </div>
+                    <div className="table-wrap">
+                        <table className="register">
+                            <thead>
+                                <tr>
+                                    {COLUMNS.map(([key, label, cls]) => (
+                                        <th key={key} className={cls} scope="col" aria-sort={sort.key === key ? (sort.dir === 1 ? 'ascending' : 'descending') : 'none'}>
+                                            <button type="button" onClick={() => toggle(key)}>{label}{sort.key === key ? (sort.dir === 1 ? ' ↑' : ' ↓') : ''}</button>
+                                        </th>
+                                    ))}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {rows.map(row => (
+                                    <tr key={row.id} onClick={() => open(row.sku)}>
+                                        {COLUMNS.map(([key, , cls]) => (
+                                            <td key={key} className={cls}>
+                                                {key === 'sku'
+                                                    ? <a className="mono" href={recordHref(row.sku)} onClick={e => e.stopPropagation()}>{row.sku}</a>
+                                                    : cell(row, key)}
+                                            </td>
+                                        ))}
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                    {data.length > 0 && rows.length === 0 && <p className="note">No records match “{query}”.</p>}
+                </div>
+            );
+        };
+
+        const Record = ({ data, loadError, sku }) => {
+            if (loadError) return <p className="note">The catalog could not be loaded ({loadError}).</p>;
+            if (data.length === 0) return <p className="note">Loading the catalog…</p>;
+            const index = data.findIndex(r => r.sku === sku);
+            const item = data[index];
+            if (!item) return <p className="note">There is no record with the identifier <span className="mono">{sku}</span>. <a href={href('catalog')}>Back to the catalog</a>.</p>;
+
+            const prev = data[index - 1], next = data[index + 1];
+            const entry = CATALOG_FIELDS.map(([key, label]) => [key, label, item[key]]).filter(([, , value]) => value);
+            const dc = DC_FIELDS.map(f => [f, f === 'identifier' ? item.sku : item['dc_' + f]]).filter(([, value]) => value);
+            const url = window.location.href.split('#')[0] + recordHref(item.sku);
+            const accessed = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+
+            return (
+                <article className="measure">
+                    <p className="label">Record <span className="mono">{item.sku}</span></p>
+                    <h1 className="page">{titleOf(item)}</h1>
+
+                    {entry.length > 0 && (
+                        <>
+                            <h2>Catalog entry</h2>
+                            <dl className="record">
+                                {entry.map(([key, label, value]) => <React.Fragment key={key}><dt>{label}</dt><dd>{value}</dd></React.Fragment>)}
+                            </dl>
+                        </>
+                    )}
+
+                    <h2>Dublin Core record</h2>
+                    <dl className="record">
+                        {dc.map(([field, value]) => (
+                            <React.Fragment key={field}>
+                                <dt>{capitalize(field)}<span className="mono term">dc:{field}</span></dt>
+                                <dd>{value}</dd>
+                            </React.Fragment>
+                        ))}
+                    </dl>
+
+                    <h2>Cite this record</h2>
+                    <p className="cite">Nike SB RPM Master Archive, “{titleOf(item)}”, record {item.sku}, <span className="mono">{url}</span>, accessed {accessed}.</p>
+
+                    <nav className="pager" aria-label="Records">
+                        <span>{prev && <a href={recordHref(prev.sku)}>← {prev.sku}</a>}</span>
+                        <a href={href('catalog')}>All records</a>
+                        <span>{next && <a href={recordHref(next.sku)}>{next.sku} →</a>}</span>
+                    </nav>
+                </article>
+            );
+        };
+
+        const Essays = ({ id }) => {
+            const essay = ESSAYS.find(e => e.id === id) || ESSAYS[0];
+            return (
+                <div className="essays">
+                    <aside className="index">
+                        <p className="label">Essays</p>
+                        <ol>
+                            {ESSAYS.map(e => (
+                                <li key={e.id}><a href={href('essays/' + e.id)} aria-current={e.id === essay.id ? 'true' : undefined}>{e.title}</a></li>
+                            ))}
+                        </ol>
+                    </aside>
+                    <article className="measure">
+                        <p className="label">Essay {essay.id.replace('essay-', '')} · {essay.date}</p>
+                        <h1 className="page">{essay.title}</h1>
+                        <p className="subtitle">{essay.subtitle}</p>
+                        {essay.content}
+                        <p className="byline">{essay.author}, {essay.date}</p>
+                    </article>
+                </div>
+            );
+        };
+
+        const NAV = [['', 'Introduction', 'intro'], ['catalog', 'Catalog', 'catalog'], ['essays', 'Essays', 'essays']];
+
         const App = () => {
             const [data, setData] = useState([]);
             const [loadError, setLoadError] = useState(null);
-            const [view, setView] = useState('intro'); // intro, catalog, essay
-            const [activeEssay, setActiveEssay] = useState(ESSAYS[0]);
-            const [searchTerm, setSearchTerm] = useState('');
-            const [selectedYear, setSelectedYear] = useState('All');
-            const [selectedItem, setSelectedItem] = useState(null);
-            const [showDC, setShowDC] = useState(false);
+            const [route, setRoute] = useState(parseHash);
 
             useEffect(() => {
                 fetch(DATA_URL, { cache: 'no-cache' })
@@ -147,281 +401,55 @@
                     .catch(err => setLoadError(err.message));
             }, []);
 
-            const years = ['All', ...[...new Set(data.map(item => item.dc_date).filter(Boolean))].sort((a, b) => b - a)];
+            useEffect(() => {
+                const onHash = () => { setRoute(parseHash()); window.scrollTo(0, 0); };
+                window.addEventListener('hashchange', onHash);
+                return () => window.removeEventListener('hashchange', onHash);
+            }, []);
 
-            const filteredData = useMemo(() => {
-                return data.filter(item => {
-                    const matchesSearch = titleOf(item).toLowerCase().includes(searchTerm.toLowerCase()) ||
-                                          item.dc_identifier.toLowerCase().includes(searchTerm.toLowerCase());
-                    const matchesYear = selectedYear === 'All' || item.dc_date === selectedYear;
-                    return matchesSearch && matchesYear;
-                });
-            }, [data, searchTerm, selectedYear]);
+            useEffect(() => {
+                const site = 'Nike SB RPM Master Archive';
+                const page = route.view === 'catalog' ? 'Catalog'
+                    : route.view === 'record' ? route.sku
+                    : route.view === 'essays' ? (ESSAYS.find(e => e.id === route.id) || ESSAYS[0]).title
+                    : null;
+                document.title = page ? `${page} · ${site}` : site;
+            }, [route]);
 
-            const navigate = (newView) => {
-                setView(newView);
-                window.scrollTo(0, 0);
-            };
+            const section = route.view === 'record' ? 'catalog' : route.view;
 
             return (
-                <div className="min-h-screen">
-                    <header className="border-b border-zinc-800 bg-zinc-950/90 backdrop-blur-xl sticky top-0 z-50">
-                        <div className="max-w-7xl mx-auto px-4 h-24 flex items-center justify-between">
-                            <div className="flex items-center gap-4 cursor-pointer" onClick={() => navigate('intro')}>
-                                <div className="w-12 h-12 bg-orange-600 rounded-none flex items-center justify-center font-black text-2xl skew-title text-black">SB</div>
-                                <div>
-                                    <h1 className="font-black text-2xl tracking-tighter uppercase italic leading-none">RPM Master Archive</h1>
-                                    <p className="text-[10px] text-zinc-500 font-mono tracking-widest uppercase mt-1">Digital Museum</p>
-                                </div>
-                            </div>
-                            <nav className="hidden md:flex gap-8 items-center uppercase text-[10px] font-black tracking-[0.2em]">
-                                <button onClick={() => navigate('intro')} className={`${view === 'intro' ? 'text-orange-500' : 'text-zinc-500 hover:text-white'} transition-colors`}>Introduction</button>
-                                <button onClick={() => navigate('catalog')} className={`${view === 'catalog' ? 'text-orange-500' : 'text-zinc-500 hover:text-white'} transition-colors`}>The Archive</button>
-                                <button onClick={() => navigate('essay')} className={`${view === 'essay' ? 'text-orange-500' : 'text-zinc-500 hover:text-white'} transition-colors`}>Essays & Methodology</button>
+                <>
+                    <header className="site">
+                        <div className="wrap">
+                            <p className="site-title"><a href={href('')}>Nike SB RPM Master Archive</a></p>
+                            <p className="site-sub">Catalog and essays on the Nike SB RPM backpack, 2007 to the present</p>
+                            <nav className="primary" aria-label="Site">
+                                {NAV.map(([path, label, view]) => (
+                                    <a key={view} href={href(path)} aria-current={section === view ? 'page' : undefined}>{label}</a>
+                                ))}
                             </nav>
                         </div>
                     </header>
 
-                    {view === 'intro' && (
-                        <div className="animate-in fade-in slide-in-from-bottom-4 duration-1000">
-                            <section className="relative h-[80vh] flex items-center justify-center overflow-hidden border-b border-zinc-900">
-                                <div className="absolute inset-0 z-0 opacity-20">
-                                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-zinc-950"></div>
-                                    <div className="grid grid-cols-12 h-full opacity-10">
-                                        {[...Array(48)].map((_, i) => <div key={i} className="border border-zinc-800"></div>)}
-                                    </div>
-                                </div>
-                                <div className="relative z-10 text-center max-w-4xl px-4">
-                                    <span className="text-orange-500 font-black text-xs tracking-[0.4em] uppercase mb-6 block">The Digital Repository</span>
-                                    <h2 className="text-7xl md:text-9xl font-black uppercase italic leading-[0.85] tracking-tighter mb-8">
-                                        The <br/> RPM Files
-                                    </h2>
-                                    <p className="text-lg text-zinc-400 font-medium max-w-2xl mx-auto prose-text italic">
-                                        Documenting the functional cornerstone of Nike SB's design history. A comprehensive DCMI-compliant record of the RPM Skateboard Pack.
-                                    </p>
-                                    <div className="mt-12 flex flex-col md:flex-row gap-4 justify-center">
-                                        <button onClick={() => navigate('catalog')} className="bg-zinc-100 text-black px-12 py-5 font-black uppercase italic tracking-widest hover:bg-orange-600 hover:text-white transition-all">
-                                            Open The Archive
-                                        </button>
-                                        <button onClick={() => { navigate('essay'); setActiveEssay(ESSAYS[0]); }} className="border border-zinc-800 text-zinc-400 px-12 py-5 font-black uppercase italic tracking-widest hover:border-zinc-700 transition-all">
-                                            Read Year Zero Essay
-                                        </button>
-                                    </div>
-                                </div>
-                            </section>
+                    <main className="wrap">
+                        {route.view === 'intro' && <Intro data={data} />}
+                        {route.view === 'catalog' && <Catalog data={data} loadError={loadError} />}
+                        {route.view === 'record' && <Record data={data} loadError={loadError} sku={route.sku} />}
+                        {route.view === 'essays' && <Essays id={route.id} />}
+                    </main>
 
-                            <section className="max-w-4xl mx-auto px-4 py-32 space-y-24">
-                                <div className="space-y-6">
-                                    <div className="flex items-center gap-3 mb-4">
-                                        <span className="w-3 h-3 bg-orange-600 rounded-sm"></span>
-                                        <h3 className="text-sm font-black italic uppercase tracking-widest text-zinc-300">Featured Research Summary</h3>
-                                    </div>
-                                    <div className="p-8 border border-zinc-800 bg-zinc-900/30">
-                                        <h4 className="text-2xl font-black italic uppercase tracking-tighter text-white mb-4">The Definition of "Year Zero"</h4>
-                                        <p className="text-zinc-400 prose-text mb-6">
-                                            The archive has formally identified <strong>BA2037 (2008)</strong> as the first publicly sold Nike SB RPM chassis. While incubation prototypes existed in 2006, BA2037 established the "fixed feature map"—board straps, laptop sleeve, MOLLE webbing—that defined the line for the next two decades. 
-                                        </p>
-                                        <button onClick={() => { navigate('essay'); setActiveEssay(ESSAYS[0]); }} className="text-orange-500 font-bold uppercase text-xs tracking-widest hover:text-white transition-colors flex items-center gap-2">
-                                            Read Full Findings <Icon name="arrow-right" className="w-3 h-3" />
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-20">
-                                    <div className="space-y-6">
-                                        <h3 className="text-2xl font-black italic uppercase tracking-tighter border-l-4 border-orange-600 pl-6">Curatorial Mission</h3>
-                                        <p className="text-zinc-400 prose-text italic">
-                                            This archive serves to standardize the metadata of the RPM series, ensuring that technical design choices from 2012–2026 are preserved in a machine-readable format.
-                                        </p>
-                                    </div>
-                                    <div className="space-y-6">
-                                        <h3 className="text-2xl font-black italic uppercase tracking-tighter border-l-4 border-orange-600 pl-6">Latest Updates</h3>
-                                        <ul className="text-zinc-500 font-mono text-xs space-y-2 uppercase tracking-widest">
-                                            <li className="text-orange-500 font-bold">+ New Essay: "Year Zero - BA2037"</li>
-                                            <li>+ Catalog Unified: One CSV Drives The Archive</li>
-                                            <li>+ Full DCMI Field Mapping Complete</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </section>
-                        </div>
-                    )}
-
-                    {view === 'catalog' && (
-                        <div className="animate-in fade-in duration-500">
-                            <main className="max-w-7xl mx-auto px-4 py-12">
-                                <section className="mb-12">
-                                    <div className="flex flex-col md:flex-row gap-2">
-                                        <div className="relative flex-1">
-                                            <div className="absolute left-5 top-1/2 -translate-y-1/2 text-zinc-600">
-                                                <Icon name="search" />
-                                            </div>
-                                            <input 
-                                                type="text"
-                                                placeholder="SEARCH ARCHIVE (Title, SKU...)"
-                                                className="w-full bg-zinc-900 border border-zinc-800 rounded-none py-5 pl-14 pr-4 focus:border-orange-600 outline-none placeholder:text-zinc-700 font-bold uppercase tracking-widest text-sm"
-                                                value={searchTerm}
-                                                onChange={(e) => setSearchTerm(e.target.value)}
-                                            />
-                                        </div>
-                                        <select 
-                                            className="bg-zinc-900 border border-zinc-800 rounded-none py-5 px-8 focus:border-orange-600 outline-none uppercase text-xs font-black tracking-widest cursor-pointer"
-                                            value={selectedYear}
-                                            onChange={(e) => setSelectedYear(e.target.value)}
-                                        >
-                                            {years.map(year => <option key={year} value={year}>{year === 'All' ? 'ALL PERIODS' : year}</option>)}
-                                        </select>
-                                    </div>
-                                </section>
-
-                                {(loadError || data.length === 0) && (
-                                    <p className="mono text-xs text-zinc-500 uppercase tracking-widest mb-8">
-                                        {loadError ? `Could not load ${DATA_URL} (${loadError})` : 'Loading archive…'}
-                                    </p>
-                                )}
-
-                                <div className="archive-grid">
-                                    {filteredData.map((item) => (
-                                        <div 
-                                            key={item.id}
-                                            onClick={() => setSelectedItem(item)}
-                                            className="group bg-zinc-900/20 border border-zinc-900 p-8 cursor-pointer hover:border-orange-600 hover:bg-zinc-900/40 transition-all relative"
-                                        >
-                                            <div className="mb-10">
-                                               <div className="bg-zinc-900 w-full aspect-square flex items-center justify-center relative border border-zinc-800">
-                                                  <Icon name="package" className="w-20 h-20 text-zinc-800 group-hover:text-orange-600 transition-all" />
-                                                  {item.rarity && (
-                                                    <div className="absolute bottom-6 left-6 bg-orange-600 text-white text-[9px] font-black px-3 py-1 uppercase italic tracking-widest">
-                                                      {item.rarity}
-                                                    </div>
-                                                  )}
-                                               </div>
-                                            </div>
-                                            <div className="space-y-2">
-                                              <p className="mono text-[11px] text-orange-500 font-bold tracking-tighter">DC.IDENTIFIER: {item.dc_identifier}</p>
-                                              <h3 className="font-black text-xl uppercase leading-tight italic">{titleOf(item)}</h3>
-                                              <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">{item.dc_date ? `${item.dc_date} Archive` : item.era}</p>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </main>
-                        </div>
-                    )}
-
-                    {view === 'essay' && (
-                        <div className="max-w-7xl mx-auto px-4 py-12 flex flex-col md:flex-row gap-20">
-                            {/* Essay Sidebar */}
-                            <aside className="md:w-64 shrink-0 space-y-12">
-                                <div>
-                                    <h4 className="text-[10px] font-black tracking-[0.3em] uppercase text-zinc-500 mb-6">Library Index</h4>
-                                    <div className="space-y-4">
-                                        {ESSAYS.map(essay => (
-                                            <button 
-                                                key={essay.id}
-                                                onClick={() => setActiveEssay(essay)}
-                                                className={`block text-left uppercase text-xs font-black italic tracking-tighter leading-tight transition-colors ${activeEssay.id === essay.id ? 'text-orange-500' : 'text-zinc-600 hover:text-white'}`}
-                                            >
-                                                {essay.title}
-                                            </button>
-                                        ))}
-                                    </div>
-                                </div>
-                            </aside>
-
-                            {/* Active Essay Content */}
-                            <article className="flex-1 max-w-3xl animate-in fade-in slide-in-from-right-4 duration-700">
-                                <div className="prose-text space-y-16">
-                                    <header className="space-y-6">
-                                        <span className="text-orange-500 font-black text-xs tracking-[0.4em] uppercase">Document Record</span>
-                                        <h2 className="text-6xl font-black uppercase italic leading-none tracking-tighter">{activeEssay.title}</h2>
-                                        <p className="text-zinc-400 font-bold uppercase italic tracking-widest">{activeEssay.subtitle}</p>
-                                        <p className="text-zinc-600 font-mono text-xs uppercase tracking-widest">{activeEssay.date} | Ref: {activeEssay.id.toUpperCase()}</p>
-                                    </header>
-                                    
-                                    <div className="text-zinc-300 text-lg">
-                                        {activeEssay.content}
-                                    </div>
-
-                                    <footer className="pt-20 border-t border-zinc-900 flex items-center gap-6">
-                                        <div className="w-16 h-16 bg-zinc-900 border border-zinc-800 flex items-center justify-center">
-                                            <Icon name="user" className="text-zinc-700" />
-                                        </div>
-                                        <div>
-                                            <p className="text-xs font-black uppercase tracking-widest text-zinc-500">Author</p>
-                                            <p className="font-black italic uppercase text-lg">{activeEssay.author}</p>
-                                        </div>
-                                    </footer>
-                                </div>
-                            </article>
-                        </div>
-                    )}
-
-                    {selectedItem && (
-                        <div className="fixed inset-0 z-[100] flex justify-end">
-                            <div className="absolute inset-0 bg-black/95 backdrop-blur-md" onClick={() => setSelectedItem(null)}></div>
-                            <div className="relative w-full max-w-3xl bg-zinc-950 border-l border-zinc-800 h-full overflow-y-auto">
-                                <div className="p-8 md:p-16">
-                                    <button onClick={() => setSelectedItem(null)} className="mb-16 text-zinc-500 hover:text-white uppercase font-black text-xs tracking-[0.3em] flex items-center gap-3">
-                                        <Icon name="chevron-left" /> Back
-                                    </button>
-                                    <h2 className="text-5xl font-black uppercase italic leading-none tracking-tighter mb-12">{titleOf(selectedItem)}</h2>
-                                    
-                                    <div className="flex border-b border-zinc-900 mb-10">
-                                        <button onClick={() => setShowDC(false)} className={`px-6 py-4 text-[10px] font-black tracking-widest uppercase border-b-2 transition-colors ${!showDC ? 'border-orange-600 text-white' : 'border-transparent text-zinc-500'}`}>General</button>
-                                        <button onClick={() => setShowDC(true)} className={`px-6 py-4 text-[10px] font-black tracking-widest uppercase border-b-2 transition-colors ${showDC ? 'border-orange-600 text-white' : 'border-transparent text-zinc-500'}`}>Metadata Schema</button>
-                                    </div>
-
-                                    {showDC ? (
-                                        <div className="grid grid-cols-1 gap-6 bg-zinc-900/40 p-8 border border-zinc-900 animate-in fade-in">
-                                            {DC_FIELDS.filter(field => selectedItem[`dc_${field}`]).map(field => (
-                                                <div key={field} className="border-b border-zinc-800 pb-4 last:border-0">
-                                                    <span className="dc-label uppercase block mb-1">DC.{field}</span>
-                                                    <span className="mono text-xs text-zinc-400">{selectedItem[`dc_${field}`]}</span>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    ) : (
-                                        <div className="space-y-12 animate-in fade-in">
-                                            <p className="text-zinc-300 text-xl leading-relaxed italic">{selectedItem.dc_description || selectedItem.notes}</p>
-                                            {selectedItem.dc_description && selectedItem.notes && (
-                                                <div>
-                                                    <p className="text-[10px] text-zinc-500 font-bold mb-1">NOTES</p>
-                                                    <p className="text-zinc-400 leading-relaxed">{selectedItem.notes}</p>
-                                                </div>
-                                            )}
-                                            <div className="grid grid-cols-2 gap-4">
-                                                {[['YEAR', selectedItem.dc_date], ['RARITY', selectedItem.rarity], ['ERA', selectedItem.era], ['STATUS', selectedItem.status]]
-                                                    .filter(([, value]) => value)
-                                                    .map(([label, value]) => (
-                                                        <div key={label} className="p-6 bg-zinc-900 border border-zinc-800">
-                                                            <p className="text-[10px] text-zinc-500 font-bold mb-1">{label}</p>
-                                                            <p className={`text-2xl font-black italic ${label === 'RARITY' ? 'text-orange-500' : ''}`}>{value}</p>
-                                                        </div>
-                                                    ))}
-                                            </div>
-                                        </div>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-                    )}
-
-                    <footer className="mt-32 border-t border-zinc-900 py-20">
-                        <div className="max-w-7xl mx-auto px-4 flex flex-col items-center">
-                            <div className="flex gap-12 opacity-20 filter grayscale mb-12">
-                                <div className="font-black text-sm italic skew-title">NIKE SB</div>
-                                <div className="font-black text-sm italic skew-title">DCMI COMPLIANT</div>
-                            </div>
-                            <p className="text-[10px] text-zinc-600 font-bold tracking-[0.3em] uppercase">Built for Architectural Preservation © 2026</p>
+                    <footer className="site">
+                        <div className="wrap">
+                            <p>Nike SB RPM Master Archive, 2026. Data and source code: <a href={REPO_URL}>github.com/tamirsegal1810-byte/rpm-archive</a>.</p>
+                            <p>An independent collector's archive, not affiliated with Nike, Inc.</p>
                         </div>
                     </footer>
-                </div>
+                </>
             );
         };
 
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<App />);
+        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
     </script>
 </body>
 </html>
