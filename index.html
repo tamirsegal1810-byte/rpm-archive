@@ -329,7 +329,7 @@
             <p>Read in <em>General</em> mode for the bags. Switch to <em>Scholarly</em> for each unit's witness record, the claims and gaps, and the fields not yet read from evidence, which are marked ${flagHtml('confirm')}.</p>
 
             <h2>Current state</h2>
-            <p>${D.units.length} ${D.units.length === 1 ? 'unit' : 'units'} logged (${held} in hand), ${D.codes.length} style ${D.codes.length === 1 ? 'code' : 'codes'} in the register, ${D.claims.filter(isLive).length} live claims, ${openGaps} open ${openGaps === 1 ? 'gap' : 'gaps'}. ${D.legacy.length} style codes carried over from the earlier catalog are listed as awaiting a witness.</p>
+            <p>${D.units.length} ${D.units.length === 1 ? 'unit' : 'units'} logged (${held} in hand), ${D.codes.length} style ${D.codes.length === 1 ? 'code' : 'codes'} in the register, ${D.claims.filter(isLive).length} live claims, ${openGaps} open ${openGaps === 1 ? 'gap' : 'gaps'}. ${D.legacy.length} style codes carried over from the earlier catalog are awaiting a witness; Scholarly mode lists them.</p>
 
             <h2>The data</h2>
             <p>The corpus is six CSV files in the project's public repository, in <a href="${REPO_URL}/tree/main/corpus"><span class="mono">corpus/</span></a>. This site reads them directly; corrections are made there.</p>
@@ -342,20 +342,20 @@
         const emptyUnits = 'No unit has been logged yet. Each bag enters the archive from a photograph of its interior label, one per session.';
         const legacyHref = r => H('legacy/' + r.sku);
         if (!scholarly()) {
+            // General mode shows only what a claim stands behind. The pre-corpus register has no
+            // claims (and includes codes whose model line is unresolved), so it is Scholarly only.
             const units = D.units.filter(inGeneral);
-            return `<h1 class="page">Catalog</h1>${searchBox}
+            const pointer = D.legacy.length
+                ? `<p class="note">${D.legacy.length} style codes from the catalog published before 1 October 2026 are awaiting a witness. They are listed, with what each still needs, in <button type="button" class="linkish" data-mode="scholarly">Scholarly mode</button>.</p>`
+                : '';
+            return `<h1 class="page">Catalog</h1>${units.length ? searchBox : ''}
                 <h2>Units</h2>
                 ${register('g-units', [
                     { key: 'code', label: 'Code', cls: 'nowrap', get: unitCode, html: u => `<span class="mono">${esc(unitCode(u))}</span>` },
                     { key: 'title', label: 'Colourway', get: unitTitle },
                     { key: 'model', label: 'Model', cls: 'wide', get: u => u.model_name },
                 ], units, { href: u => H('unit/' + u.unit_id), empty: D.units.length ? 'No unit is described in general mode yet: a unit appears here once a claim cites it. Switch to Scholarly to see every logged unit.' : emptyUnits })}
-                <h2>Awaiting a witness</h2>${legacyIntro}
-                ${register('g-legacy', [
-                    { key: 'sku', label: 'Code', cls: 'nowrap', get: r => r.sku, html: r => a('legacy/' + r.sku, esc(r.sku), 'mono') },
-                    { key: 'name', label: 'Name', get: r => r.name },
-                    { key: 'colorway', label: 'Colourway', cls: 'wide', get: r => r.colorway },
-                ], D.legacy, { href: legacyHref })}`;
+                ${pointer}`;
         }
         return `<h1 class="page">Catalog</h1>${searchBox}
             <h2>Units</h2>
@@ -444,7 +444,7 @@
                 { key: 'prod', label: 'Produced', get: u => u.production_date },
                 { key: 'custody', label: 'Custody', cls: 'wide', get: u => u.custody },
             ], shownUnits, { href: u => H('unit/' + u.unit_id), empty: 'None logged' + (units.length && !scholarly() ? ' with a claim behind them; switch to Scholarly to see all.' : '.') })}
-            ${legacy.length ? `<h2>In the pre-corpus register</h2>${register('code-legacy', [
+            ${legacy.length && scholarly() ? `<h2>In the pre-corpus register</h2>${register('code-legacy', [
                 { key: 'sku', label: 'Code', cls: 'nowrap', get: r => r.sku, html: r => a('legacy/' + r.sku, esc(r.sku), 'mono') },
                 { key: 'name', label: 'Name', get: r => r.name },
                 { key: 'colorway', label: 'Colourway', cls: 'wide', get: r => r.colorway },
@@ -584,27 +584,31 @@
             </div>`,
         },
         {
+            // Withdrawn 2026-10-01. It described Dublin Core on every record, which the archive no
+            // longer does (Dublin Core applies at publication), quoted an unattributed line, and made
+            // an unsourced construction claim, now held as RPM-CLAIM-008. The text is in git history.
             id: 'essay-02',
             title: 'Methodology & Standardized Data',
-            subtitle: 'The DCMI Protocol in Streetwear Archiving',
             date: 'Jan 2026',
-            author: 'T. Segal',
-            claims: [],
-            html: `<div class="essay-body">
-                <p>The digital preservation of tactical streetwear requires a shift from consumerist listing to archival documentation. This project utilizes the <strong>Dublin Core Metadata Element Set (DCMI)</strong> to categorize items based on their historical and physical properties.</p>
-                <h4>I. The 15 Core Elements</h4>
-                <p>To ensure longevity, every RPM record contains the fifteen core descriptors. This allows researchers to understand not just the 'What' (SKU: BA5403-010) but the 'Where' (Coverage) and the 'Who' (Contributors).</p>
-                <blockquote>"Metadata is the last remaining footprint of physical objects in a post-analog age."</blockquote>
-                <p>Our ongoing research focuses on material degradation. The transition from heavy polyester duck canvas to lighter recycled synthetics marks a significant shift in Nike SB's environmental policy.</p>
-            </div>`,
+            withdrawn: '1 October 2026',
+            notice: 'It described a design in which every record carries the fifteen Dublin Core elements; the archive now applies Dublin Core at publication, not to its evidence records. Its one substantive assertion, a shift in body material from polyester duck canvas to recycled synthetics, is kept as claim RPM-CLAIM-008, speculative until units are cited.',
         },
     ];
 
     function pageEssays(id) {
-        const essay = ESSAYS.find(e => e.id === id) || ESSAYS[0];
+        const live = ESSAYS.filter(e => !e.withdrawn);
+        const essay = ESSAYS.find(e => e.id === id) || live[0];
+        const index = `<aside class="index"><p class="label">Essays</p><ol>${live.map(e => `<li><a href="${H('essays/' + e.id)}"${e.id === essay.id ? ' aria-current="true"' : ''}>${esc(e.title)}</a></li>`).join('')}</ol></aside>`;
+        if (essay.withdrawn) {
+            return `<div class="essays">${index}<article class="measure">
+                <p class="label">Essay ${esc(essay.id.replace('essay-', ''))} · withdrawn</p>
+                <h1 class="page muted">${esc(essay.title)}</h1>
+                <p class="banner">Withdrawn ${esc(essay.withdrawn)}. ${linkIds(esc(essay.notice))}</p>
+            </article></div>`;
+        }
         const claims = essay.claims.map(cid => byId(D.claims, 'claim_id', cid)).filter(Boolean);
         return `<div class="essays">
-            <aside class="index"><p class="label">Essays</p><ol>${ESSAYS.map(e => `<li><a href="${H('essays/' + e.id)}"${e.id === essay.id ? ' aria-current="true"' : ''}>${esc(e.title)}</a></li>`).join('')}</ol></aside>
+            ${index}
             <article class="measure">
                 <p class="label">Essay ${esc(essay.id.replace('essay-', ''))} · ${esc(essay.date)}</p>
                 <h1 class="page">${esc(essay.title)}</h1>
