@@ -36,7 +36,7 @@ Every record has one address, the same in both reading modes:
 
 **General** mode shows the bag, and only units that a live claim cites. **Scholarly** mode shows the full witness record, every unit, the claims, gaps and sources, and the `[confirm]` flags.
 
-Label photographs go in `photos/labels/`, hangtags in `photos/hangtags/`, with the file named after the unit (`RPM-UNIT-001.jpg`). The unit's `label_photo` field holds the file name. A code counts as `attested` only when a witness unit's label photograph is published here, so anyone can trace a claim to the unit, the photograph and the transcription without access to private storage. Full-resolution originals stay in Drive.
+Label photographs go in `photos/labels/`, hangtags in `photos/hangtags/`, with the file named after the unit (`RPM-UNIT-001.jpg`). A whole-bag photo goes in `photos/construction/<unit_id>-bag.jpg` and shows on the unit page in both modes. The unit's `label_photo` field holds the file name. A code counts as `attested` only when a witness unit's label photograph is published here, so anyone can trace a claim to the unit, the photograph and the transcription without access to private storage. Full-resolution originals stay in Drive.
 
 ### Citing
 

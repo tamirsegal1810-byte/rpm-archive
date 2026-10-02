@@ -222,7 +222,7 @@
         return s && x && !s.includes('-') ? `${s}-${x}` : s;
     };
     const baseOf = code => clean(code).split('-')[0];
-    const unitTitle = u => clean(u.colorway_name) || clean(u.model_name) || unitCode(u) || u.unit_id;
+    const unitTitle = u => clean(u.colorway_name) || [clean(u.model_name), unitCode(u)].filter(Boolean).join(' ') || u.unit_id;
     const isLive = c => !/^(retracted|superseded)$/i.test(clean(c.status));
     const claimsCiting = uid => D.claims.filter(c => idList(c.evidence_unit_ids).includes(uid));
     // General mode shows a unit only when a live claim cites it.
@@ -361,7 +361,7 @@
                 <h2>Units</h2>
                 ${register('g-units', [
                     { key: 'code', label: 'Code', cls: 'nowrap', get: unitCode, html: u => `<span class="mono">${esc(unitCode(u))}</span>` },
-                    { key: 'title', label: 'Colourway', get: unitTitle },
+                    { key: 'title', label: 'Colourway', get: u => u.colorway_name },
                     { key: 'model', label: 'Model', cls: 'wide', get: u => u.model_name },
                 ], units, { href: u => H('unit/' + u.unit_id), empty: D.units.length ? 'No unit is described in general mode yet: a unit appears here once a claim cites it. Switch to Scholarly to see every logged unit.' : emptyUnits })}
                 ${pointer}`;
@@ -406,6 +406,8 @@
         const u = D.units[index];
         if (!u) return notFound('unit', id, ['catalog', 'Back to the catalog']);
         const code = unitCode(u);
+        // Whole-bag photo by naming convention; the figure removes itself if the file is absent.
+        const bagPhoto = `photos/construction/${id}-bag.jpg`;
         const claims = claimsCiting(id);
         const live = claims.filter(isLive);
         const head = `<p class="label">Unit <span class="mono">${esc(id)}</span> · ${codeLink(code)}</p><h1 class="page">${esc(unitTitle(u))}</h1>`;
@@ -413,12 +415,12 @@
         if (!scholarly()) {
             const period = live.filter(c => /period/i.test(c.claim_type));
             body = live.length
-                ? `${photo(u.label_photo, 'labels', 'Interior label')}
+                ? `${photo(bagPhoto, 'construction', 'The bag')}${photo(u.label_photo, 'labels', 'Interior label')}
                    ${dl([['Model', esc(clean(u.model_name)) || DASH], ['Style code', `<span class="mono">${esc(code)}</span>`], ['Colourway', esc(clean(u.colorway_name)) || DASH]].concat(period.length ? [['Period', period.map(c => esc(clean(c.statement))).join('<br>')]] : []))}
                    <h2>What the archive says about it</h2>${claimList(live)}`
                 : `<p class="banner">No claim cites this unit yet, so it has no general-mode description. <button type="button" class="linkish" data-mode="scholarly">Switch to Scholarly</button> for its witness record.</p>`;
         } else {
-            body = `${photo(u.label_photo, 'labels', 'Interior label')}${photo(u.hangtag_photo, 'hangtags', 'Hangtag')}
+            body = `${photo(u.label_photo, 'labels', 'Interior label')}${photo(bagPhoto, 'construction', 'The bag')}${photo(u.hangtag_photo, 'hangtags', 'Hangtag')}
                 ${UNIT_GROUPS.map(([title, fields]) => `<h3>${esc(title)}</h3>${dl(fields.map(([k, label]) => [label, k === 'source_ref' ? (clean(u[k]) ? linkIds(fmt(u[k])) : DASH) : val(u[k])]))}`).join('')}
                 <h2>Claims citing this unit</h2>${claimList(claims) || '<p class="note">None yet.</p>'}`;
         }
